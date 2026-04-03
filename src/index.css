@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body {
+    @apply bg-navy-900 text-white font-sans;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+}
+
+@layer utilities {
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  }
+  .gradient-btn {
+    background-image: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    @apply text-white font-semibold rounded-lg transition-all duration-200 hover:opacity-90 hover:shadow-lg hover:shadow-blue-500/30;
+  }
+  .card-dark {
+    @apply bg-navy-800 border border-white/10 rounded-2xl;
+  }
+  .section-pad {
+    @apply py-20 px-4 sm:px-6 lg:px-8;
+  }
+}
+
+/* Animated gradient border on cards */
+.glow-card {
+  position: relative;
+}
+.glow-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(59,130,246,0.3), rgba(139,92,246,0.3));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
