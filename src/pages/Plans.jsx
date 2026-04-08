@@ -260,71 +260,143 @@ export default function Plans() {
 
       {/* ── Plan Cards ── */}
       <section className="pb-20 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {PLANS.map((plan) => (
-              <div key={plan.name} className={`relative rounded-3xl p-8 flex flex-col border ${plan.highlight ? plan.color : plan.color} ${plan.highlight ? "shadow-[0_20px_60px_rgba(29,78,216,0.25)]" : "shadow-card-md bg-white"}`}>
-                {plan.badge && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-amber-400 text-amber-900 px-5 py-1.5 rounded-full text-xs font-extrabold shadow-sm">
-                    {plan.badge}
-                  </div>
-                )}
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-7 items-stretch">
 
+            {/* ── STARTER ── */}
+            <div className="relative flex flex-col bg-white border-2 border-slate-200 rounded-3xl shadow-card-md overflow-hidden hover:border-medical-300 hover:shadow-card-hover transition-all duration-300">
+              <div className="h-1.5 w-full bg-gradient-to-r from-medical-400 to-medical-600" />
+              <div className="p-8 flex flex-col flex-1">
                 <div className="mb-6">
-                  <div className="text-4xl mb-3">{plan.icon}</div>
-                  <h3 className={`font-extrabold text-2xl mb-1 ${plan.highlight ? "text-white" : plan.name === "Enterprise" ? "text-white" : "text-slate-900"}`}>{plan.name}</h3>
-                  <p className={`text-sm mb-5 ${plan.highlight ? "text-blue-100" : plan.name === "Enterprise" ? "text-slate-300" : "text-slate-500"}`}>{plan.tagline}</p>
-
-                  <div className="mb-1">
-                    <span className={`text-5xl font-extrabold ${plan.highlight ? "text-white" : plan.name === "Enterprise" ? "text-white" : "text-slate-900"}`}>
-                      {plan.price === "Custom" ? "Custom" : annual ? plan.price.replace("$", "$").replace("99", "49").replace("99", "49") + "" : plan.price}
-                    </span>
-                    {plan.price !== "Custom" && (
-                      <span className={`text-sm ml-1 ${plan.highlight ? "text-blue-200" : plan.name === "Enterprise" ? "text-slate-400" : "text-slate-500"}`}>{plan.period}</span>
-                    )}
+                  <div className="w-12 h-12 rounded-xl bg-medical-50 border border-medical-100 flex items-center justify-center text-2xl mb-4">🏥</div>
+                  <h3 className="font-extrabold text-2xl text-slate-900 mb-1">Starter</h3>
+                  <p className="text-slate-500 text-sm mb-5">Solo &amp; small practices getting started with AI</p>
+                  <div className="mb-1 flex items-end gap-1">
+                    <span className="text-5xl font-extrabold text-slate-900">{annual ? "$249" : "$299"}</span>
+                    <span className="text-slate-500 text-sm mb-1.5">/provider/month</span>
                   </div>
-                  <p className={`text-xs ${plan.highlight ? "text-blue-200" : plan.name === "Enterprise" ? "text-slate-400" : "text-slate-400"}`}>
-                    {annual && plan.price !== "Custom" ? "✓ Annual discount applied" : plan.annual}
-                  </p>
+                  <p className="text-slate-400 text-xs">{annual ? "✓ Annual discount applied — save $600/yr" : "$249/provider/month billed annually"}</p>
                 </div>
-
-                <a
-                  href={APP_URL}
-                  className={`text-center py-3.5 rounded-xl font-bold text-sm mb-6 inline-block transition-all ${
-                    plan.highlight
-                      ? "bg-white text-medical-800 hover:bg-medical-50 shadow-btn"
-                      : plan.name === "Enterprise"
-                      ? "bg-teal-600 text-white hover:bg-teal-500 shadow-teal-glow"
-                      : "btn-primary"
-                  }`}
-                >
-                  {plan.cta} →
+                <a href={APP_URL} className="block text-center py-3.5 rounded-xl font-bold text-sm mb-6 bg-gradient-to-r from-medical-700 to-medical-600 text-white hover:from-medical-600 hover:to-medical-500 transition-all shadow-btn">
+                  Start Free Trial →
                 </a>
-
                 <ul className="space-y-2.5 flex-1">
-                  {plan.features.map((f) => (
+                  {[
+                    { label: "Ambient Clinical Scribe", ok: true },
+                    { label: "SOAP Note Generation", ok: true },
+                    { label: "Basic ICD/CPT Coding", ok: true },
+                    { label: "Patient Scheduling", ok: true },
+                    { label: "HIPAA-Secure Infrastructure", ok: true },
+                    { label: "Up to 2 providers", ok: true },
+                    { label: "Email & chat support", ok: true },
+                    { label: "Autonomous Revenue Cycle", ok: false },
+                    { label: "Eligibility & Prior Auth Agent", ok: false },
+                    { label: "Custom Specialty Templates", ok: false },
+                    { label: "Priority Support & SLA", ok: false },
+                  ].map((f) => (
                     <li key={f.label} className="flex items-center gap-2.5">
-                      {f.included ? (
-                        <div className={`w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 ${plan.highlight ? "bg-white/20" : "bg-emerald-100"}`}>
-                          <svg className={`w-3 h-3 ${plan.highlight ? "text-white" : "text-emerald-600"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7"/>
-                          </svg>
+                      {f.ok ? (
+                        <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
+                          <svg className="w-3 h-3 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7"/></svg>
                         </div>
                       ) : (
-                        <div className="w-5 h-5 rounded-full bg-white/10 border border-white/10 flex items-center justify-center flex-shrink-0">
-                          <svg className="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4"/>
-                          </svg>
+                        <div className="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center flex-shrink-0">
+                          <svg className="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4"/></svg>
                         </div>
                       )}
-                      <span className={`text-sm ${f.bold ? "font-bold" : ""} ${
-                        plan.highlight ? "text-white" : plan.name === "Enterprise" ? "text-slate-200" : f.included ? "text-slate-700" : "text-slate-400"
-                      }`}>{f.label}</span>
+                      <span className={`text-sm ${f.ok ? "text-slate-700" : "text-slate-400"}`}>{f.label}</span>
                     </li>
                   ))}
                 </ul>
               </div>
-            ))}
+            </div>
+
+            {/* ── PROFESSIONAL (featured) ── */}
+            <div className="relative flex flex-col rounded-3xl overflow-hidden" style={{ boxShadow: "0 20px 60px rgba(29,78,216,0.28), 0 4px 16px rgba(29,78,216,0.18)" }}>
+              {/* Badge */}
+              <div className="absolute -top-0 left-0 right-0 flex justify-center z-10 pt-0">
+                <div className="bg-amber-400 text-amber-900 px-5 py-1.5 text-xs font-extrabold tracking-wide rounded-b-xl shadow-sm">
+                  ⭐ Most Popular
+                </div>
+              </div>
+              <div className="flex flex-col flex-1 p-8 pt-12" style={{ background: "linear-gradient(160deg, #1d4ed8 0%, #1e40af 60%, #0d9488 100%)" }}>
+                <div className="mb-6">
+                  <div className="w-12 h-12 rounded-xl bg-white/15 border border-white/20 flex items-center justify-center text-2xl mb-4">⚡</div>
+                  <h3 className="font-extrabold text-2xl text-white mb-1">Professional</h3>
+                  <p className="text-blue-100 text-sm mb-5">Growing specialty practices that want full AI automation</p>
+                  <div className="mb-1 flex items-end gap-1">
+                    <span className="text-5xl font-extrabold text-white">{annual ? "$499" : "$599"}</span>
+                    <span className="text-blue-200 text-sm mb-1.5">/provider/month</span>
+                  </div>
+                  <p className="text-blue-200 text-xs">{annual ? "✓ Annual discount applied — save $1,200/yr" : "$499/provider/month billed annually"}</p>
+                </div>
+                <a href={APP_URL} className="block text-center py-3.5 rounded-xl font-bold text-sm mb-6 bg-white text-medical-800 hover:bg-blue-50 transition-colors shadow-btn">
+                  Start Free Trial →
+                </a>
+                <ul className="space-y-2.5 flex-1">
+                  {[
+                    { label: "Everything in Starter", bold: true },
+                    { label: "Autonomous Revenue Cycle" },
+                    { label: "Real-Time Revenue Intelligence" },
+                    { label: "Eligibility & Prior Auth Agent" },
+                    { label: "Claims Integrity Agent" },
+                    { label: "10+ Specialty Templates" },
+                    { label: "Up to 15 providers" },
+                    { label: "Priority support & 99.9% SLA" },
+                    { label: "Custom reporting & dashboards" },
+                    { label: "API integrations (labs, pharmacy)" },
+                  ].map((f) => (
+                    <li key={f.label} className="flex items-center gap-2.5">
+                      <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
+                        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7"/></svg>
+                      </div>
+                      <span className={`text-sm text-white ${f.bold ? "font-bold" : ""}`}>{f.label}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* ── ENTERPRISE ── */}
+            <div className="relative flex flex-col rounded-3xl overflow-hidden border-2 border-teal-700 hover:border-teal-500 transition-all duration-300" style={{ boxShadow: "0 8px 32px rgba(13,148,136,0.18)", background: "linear-gradient(160deg, #134e4a 0%, #0f766e 50%, #1e3a8a 100%)" }}>
+              <div className="h-1.5 w-full bg-gradient-to-r from-teal-400 to-teal-300" />
+              <div className="p-8 flex flex-col flex-1">
+                <div className="mb-6">
+                  <div className="w-12 h-12 rounded-xl bg-white/15 border border-white/20 flex items-center justify-center text-2xl mb-4">🏢</div>
+                  <h3 className="font-extrabold text-2xl text-white mb-1">Enterprise</h3>
+                  <p className="text-teal-100 text-sm mb-5">Large groups, health systems, and custom deployments</p>
+                  <div className="mb-1">
+                    <span className="text-5xl font-extrabold text-white">Custom</span>
+                  </div>
+                  <p className="text-teal-200 text-xs mt-1">Tailored to your organization · Multi-year options</p>
+                </div>
+                <a href={APP_URL} className="block text-center py-3.5 rounded-xl font-bold text-sm mb-6 bg-white text-teal-800 hover:bg-teal-50 transition-colors shadow-teal-glow">
+                  Contact Sales →
+                </a>
+                <ul className="space-y-2.5 flex-1">
+                  {[
+                    { label: "Everything in Professional", bold: true },
+                    { label: "Unlimited providers" },
+                    { label: "Custom AI Agent Configuration" },
+                    { label: "Multi-site & Multi-specialty" },
+                    { label: "FHIR API & custom integrations" },
+                    { label: "On-premise deployment option" },
+                    { label: "Dedicated success manager" },
+                    { label: "99.99% uptime SLA" },
+                    { label: "Custom BAA & data governance" },
+                    { label: "Staff training & credentialing" },
+                    { label: "White-label option available" },
+                  ].map((f) => (
+                    <li key={f.label} className="flex items-center gap-2.5">
+                      <div className="w-5 h-5 rounded-full bg-teal-400/30 flex items-center justify-center flex-shrink-0">
+                        <svg className="w-3 h-3 text-teal-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7"/></svg>
+                      </div>
+                      <span className={`text-sm text-teal-50 ${f.bold ? "font-bold text-white" : ""}`}>{f.label}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
 
           <div className="mt-8 text-center text-slate-500 text-sm">

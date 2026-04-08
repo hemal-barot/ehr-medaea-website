@@ -4,35 +4,35 @@ const APP_URL = import.meta.env.VITE_APP_URL || "http://localhost:5000";
 
 const FOOTER_LINKS = {
   Product: [
-    { label: "Platform Overview", to: "/platform" },
-    { label: "AI Clinical Scribe", to: "/platform" },
-    { label: "Revenue Cycle", to: "/platform" },
-    { label: "Eligibility & Auth", to: "/platform" },
-    { label: "Claims Integrity", to: "/platform" },
-    { label: "Smart Scheduling", to: "/platform" },
+    { label: "Platform Overview",    to: "/platform" },
+    { label: "AI Clinical Scribe",   to: "/platform" },
+    { label: "Revenue Cycle",        to: "/platform" },
+    { label: "Eligibility & Auth",   to: "/platform" },
+    { label: "Claims Integrity",     to: "/platform" },
+    { label: "Smart Scheduling",     to: "/platform" },
   ],
   Company: [
-    { label: "About Medaea", to: "/about" },
-    { label: "Why Choose Us", to: "/why-us" },
+    { label: "About Medaea",   to: "/about" },
+    { label: "Why Choose Us",  to: "/why-us" },
     { label: "Plans & Pricing", to: "/plans" },
-    { label: "Request Demo", href: APP_URL },
-    { label: "Login to EHR", href: APP_URL },
-    { label: "Contact Us", href: "mailto:hello@medaea.ai" },
+    { label: "Request Demo",   href: APP_URL },
+    { label: "Login to EHR",   href: APP_URL },
+    { label: "Contact Us",     href: "mailto:hello@medaea.ai" },
   ],
   Legal: [
-    { label: "Privacy Policy", to: "/privacy-policy" },
-    { label: "Disclaimer", to: "/disclaimer" },
-    { label: "SaaS Terms", to: "/saas-terms-of-service" },
-    { label: "Web Terms", to: "/web-terms-of-service" },
-    { label: "HIPAA Notice", to: "/privacy-policy" },
-    { label: "BAA Agreement", href: "mailto:legal@medaea.ai" },
+    { label: "Privacy Policy",  to: "/privacy-policy" },
+    { label: "Disclaimer",      to: "/disclaimer" },
+    { label: "SaaS Terms",      to: "/saas-terms-of-service" },
+    { label: "Web Terms",       to: "/web-terms-of-service" },
+    { label: "HIPAA Notice",    to: "/privacy-policy" },
+    { label: "BAA Agreement",   href: "mailto:legal@medaea.ai" },
   ],
   Support: [
-    { label: "Help Center", href: "mailto:support@medaea.ai" },
-    { label: "Documentation", href: "mailto:support@medaea.ai" },
+    { label: "Help Center",     href: "mailto:support@medaea.ai" },
+    { label: "Documentation",   href: "mailto:support@medaea.ai" },
     { label: "Training Portal", href: APP_URL },
-    { label: "System Status", href: "https://status.medaea.ai" },
-    { label: "1-800-MEDAEA-1", href: "tel:18006332311" },
+    { label: "System Status",   to: "/about" },
+    { label: "1-800-MEDAEA-1",  href: "tel:18006332311" },
     { label: "hello@medaea.ai", href: "mailto:hello@medaea.ai" },
   ],
 };
@@ -85,64 +85,87 @@ const SOCIALS = [
 ];
 
 function FooterLink({ item }) {
+  const cls = "group flex items-center gap-2 text-slate-600 hover:text-medical-700 text-sm transition-colors duration-200 py-0.5";
+  const dot = (
+    <span className="w-1.5 h-1.5 rounded-full bg-slate-300 group-hover:bg-medical-500 transition-colors flex-shrink-0" />
+  );
+
   if (item.href) {
     return (
       <a
         href={item.href}
         target={item.href.startsWith("http") ? "_blank" : undefined}
         rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
-        className="text-slate-500 hover:text-medical-700 text-sm transition-colors duration-200 flex items-center gap-1.5 group"
+        className={cls}
       >
-        <svg className="w-3 h-3 text-slate-300 group-hover:text-medical-400 transition-colors" fill="currentColor" viewBox="0 0 6 6">
-          <circle cx="3" cy="3" r="2"/>
-        </svg>
-        {item.label}
+        {dot} {item.label}
       </a>
     );
   }
   return (
-    <Link
-      to={item.to}
-      className="text-slate-500 hover:text-medical-700 text-sm transition-colors duration-200 flex items-center gap-1.5 group"
-    >
-      <svg className="w-3 h-3 text-slate-300 group-hover:text-medical-400 transition-colors" fill="currentColor" viewBox="0 0 6 6">
-        <circle cx="3" cy="3" r="2"/>
-      </svg>
-      {item.label}
+    <Link to={item.to} className={cls}>
+      {dot} {item.label}
     </Link>
   );
 }
 
 export default function Footer() {
   return (
-    <footer className="bg-slate-900 text-white">
-      {/* Main footer content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-10">
+    <footer className="bg-slate-50 border-t border-slate-200">
+
+      {/* ── CTA Banner ── */}
+      <div className="bg-gradient-to-r from-medical-700 to-teal-700">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-5">
+            <div>
+              <p className="text-white font-extrabold text-xl mb-1">Ready to transform your practice?</p>
+              <p className="text-medical-100 text-sm">Join 200+ practices using Medaea AI. Go live in under 7 days.</p>
+            </div>
+            <div className="flex items-center gap-3 flex-shrink-0">
+              <a
+                href={APP_URL}
+                className="px-6 py-2.5 rounded-xl text-sm font-bold border-2 border-white text-white hover:bg-white hover:text-medical-800 transition-all"
+              >
+                Book a Demo
+              </a>
+              <a
+                href={APP_URL}
+                className="px-6 py-2.5 rounded-xl text-sm font-extrabold bg-white text-medical-800 hover:bg-medical-50 transition-colors shadow-btn"
+              >
+                Get Started Free →
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Main footer body ── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 mb-12">
 
           {/* Brand column */}
           <div className="lg:col-span-3">
             <Link to="/" className="flex items-center gap-2.5 mb-5">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-medical-600 to-teal-600 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-medical-700 to-teal-600 flex items-center justify-center shadow-blue-glow">
                 <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
                 </svg>
               </div>
               <div>
-                <span className="text-xl font-extrabold text-white tracking-tight">Medaea</span>
-                <span className="block text-[10px] font-medium text-teal-400 tracking-widest uppercase">AI-Native EHR</span>
+                <span className="text-xl font-extrabold text-medical-900 tracking-tight leading-none">Medaea</span>
+                <span className="block text-[10px] font-semibold text-teal-600 tracking-widest uppercase leading-none mt-0.5">AI-Native EHR</span>
               </div>
             </Link>
 
-            <p className="text-slate-400 text-sm leading-relaxed mb-5 max-w-xs">
+            <p className="text-slate-500 text-sm leading-relaxed mb-4 max-w-xs">
               The world's first truly AI-native EMR — unifying clinical documentation, revenue cycle, and practice intelligence in one intelligent platform.
             </p>
 
-            <p className="text-teal-400 text-xs italic font-medium mb-6">
+            <p className="text-teal-600 text-xs italic font-semibold mb-5">
               "AI that cares so clinicians can care."
             </p>
 
-            {/* Social links */}
+            {/* Social icons */}
             <div className="flex items-center gap-2 mb-6">
               {SOCIALS.map((s) => (
                 <a
@@ -151,7 +174,7 @@ export default function Footer() {
                   target={s.href.startsWith("http") ? "_blank" : undefined}
                   rel={s.href.startsWith("http") ? "noopener noreferrer" : undefined}
                   aria-label={s.label}
-                  className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-400 hover:text-white hover:bg-medical-700 hover:border-medical-600 transition-all duration-200"
+                  className="w-9 h-9 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-slate-500 hover:text-medical-700 hover:border-medical-300 hover:bg-medical-50 transition-all duration-200 shadow-card"
                 >
                   {s.icon}
                 </a>
@@ -161,7 +184,10 @@ export default function Footer() {
             {/* Compliance badges */}
             <div className="flex flex-wrap gap-2">
               {COMPLIANCE.map((b) => (
-                <span key={b.label} className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/5 border border-white/8 text-slate-400 text-xs">
+                <span
+                  key={b.label}
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-600 text-xs shadow-sm"
+                >
                   <span>{b.icon}</span>
                   {b.label}
                 </span>
@@ -173,8 +199,8 @@ export default function Footer() {
           <div className="lg:col-span-9 grid grid-cols-2 md:grid-cols-4 gap-8">
             {Object.entries(FOOTER_LINKS).map(([category, links]) => (
               <div key={category}>
-                <h4 className="text-white font-bold text-sm mb-4 tracking-wide">{category}</h4>
-                <ul className="space-y-2.5">
+                <h4 className="text-slate-900 font-extrabold text-sm mb-4 uppercase tracking-wider">{category}</h4>
+                <ul className="space-y-1.5">
                   {links.map((item) => (
                     <li key={item.label}>
                       <FooterLink item={item} />
@@ -186,34 +212,18 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* CTA strip */}
-        <div className="mb-10 p-6 rounded-2xl bg-gradient-to-r from-medical-800 to-teal-800 border border-white/10">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div>
-              <p className="text-white font-bold text-lg mb-1">Ready to transform your practice?</p>
-              <p className="text-medical-200 text-sm">Join 200+ practices using Medaea AI. Go live in under 7 days.</p>
-            </div>
-            <div className="flex items-center gap-3 flex-shrink-0">
-              <a href={APP_URL} className="btn-outline-white px-5 py-2.5 text-sm rounded-xl">Book a Demo</a>
-              <a href={APP_URL} className="px-6 py-2.5 rounded-xl text-sm font-bold text-medical-900 bg-white hover:bg-medical-50 transition-colors shadow-btn">
-                Get Started Free
-              </a>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom bar */}
-        <div className="pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-3">
-          <p className="text-slate-500 text-xs">
+        {/* Divider */}
+        <div className="border-t border-slate-200 pt-8 flex flex-col sm:flex-row justify-between items-center gap-3">
+          <p className="text-slate-400 text-xs">
             © {new Date().getFullYear()} Medaea.ai, Inc. All rights reserved. Not a substitute for clinical judgment.
           </p>
-          <div className="flex items-center gap-4 text-slate-500 text-xs">
-            <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-5">
+            <div className="flex items-center gap-1.5 text-slate-500 text-xs">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
               All systems operational
             </div>
-            <span>·</span>
-            <span>99.9% uptime SLA</span>
+            <span className="text-slate-300">·</span>
+            <span className="text-slate-400 text-xs">99.9% uptime SLA</span>
           </div>
         </div>
       </div>

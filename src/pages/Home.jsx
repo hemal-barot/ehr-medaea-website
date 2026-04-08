@@ -524,6 +524,218 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Medical Imagery: Real-World Scenes ── */}
+      <section className="section-pad-sm bg-slate-50">
+        <div className="container-xl">
+          <div className="text-center mb-10">
+            <span className="badge-primary mb-4 inline-block">Where Medaea Lives</span>
+            <h2 className="text-4xl font-extrabold text-slate-900 mb-3 tracking-tight">
+              AI Working Alongside <span className="gradient-text">Every Doctor, Every Day</span>
+            </h2>
+            <p className="text-slate-500 max-w-2xl mx-auto">
+              From solo family physicians to multi-site specialty groups — Medaea AI works invisibly in the background while your team focuses entirely on patient care.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {/* Doctor card 1: Doctor-Patient Consultation */}
+            <div className="relative overflow-hidden rounded-2xl shadow-card-lg group hover:-translate-y-1 transition-all duration-300">
+              <div className="h-52 bg-gradient-to-br from-blue-50 to-blue-100 relative flex items-center justify-center">
+                <svg viewBox="0 0 320 200" className="w-full h-full absolute inset-0" fill="none">
+                  <rect width="320" height="200" fill="url(#bg1)" rx="0"/>
+                  <defs>
+                    <linearGradient id="bg1" x1="0" y1="0" x2="320" y2="200" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#eff6ff"/>
+                      <stop offset="1" stopColor="#dbeafe"/>
+                    </linearGradient>
+                  </defs>
+                  {/* Room background */}
+                  <rect x="0" y="120" width="320" height="80" fill="#e0e7ff" rx="0"/>
+                  {/* Doctor */}
+                  <circle cx="100" cy="70" r="26" fill="#bfdbfe"/>
+                  <ellipse cx="100" cy="130" rx="30" ry="40" fill="#2563eb"/>
+                  {/* Stethoscope */}
+                  <path d="M88 95 Q85 110 90 118 Q96 126 100 120" stroke="#1e40af" strokeWidth="3" fill="none" strokeLinecap="round"/>
+                  <circle cx="100" cy="121" r="5" fill="#1e40af"/>
+                  {/* Doctor face */}
+                  <circle cx="100" cy="67" r="18" fill="#fde68a"/>
+                  <circle cx="93" cy="64" r="2" fill="#1e293b"/>
+                  <circle cx="107" cy="64" r="2" fill="#1e293b"/>
+                  <path d="M94 74 Q100 79 106 74" stroke="#1e293b" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+                  {/* Doctor coat */}
+                  <rect x="74" y="92" width="52" height="8" rx="4" fill="white"/>
+                  {/* Patient */}
+                  <circle cx="210" cy="85" r="22" fill="#fde68a"/>
+                  <circle cx="202" cy="82" r="1.8" fill="#1e293b"/>
+                  <circle cx="218" cy="82" r="1.8" fill="#1e293b"/>
+                  <path d="M204 92 Q210 97 216 92" stroke="#1e293b" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+                  <ellipse cx="210" cy="135" rx="26" ry="35" fill="#e2e8f0"/>
+                  {/* Desk */}
+                  <rect x="130" y="108" width="80" height="10" rx="5" fill="#93c5fd"/>
+                  {/* Computer on desk */}
+                  <rect x="145" y="72" width="50" height="36" rx="3" fill="#1e293b"/>
+                  <rect x="148" y="75" width="44" height="28" rx="2" fill="#38bdf8"/>
+                  {/* AI text on screen */}
+                  <rect x="152" y="79" width="20" height="3" rx="1.5" fill="white" opacity="0.8"/>
+                  <rect x="152" y="84" width="32" height="2" rx="1" fill="#7dd3fc" opacity="0.8"/>
+                  <rect x="152" y="88" width="28" height="2" rx="1" fill="#7dd3fc" opacity="0.8"/>
+                  <rect x="152" y="92" width="24" height="2" rx="1" fill="#7dd3fc" opacity="0.8"/>
+                  {/* AI pulse dot */}
+                  <circle cx="182" cy="80" r="3" fill="#34d399" opacity="0.9"/>
+                </svg>
+                <div className="absolute top-3 right-3 bg-white/90 rounded-full px-3 py-1 text-xs font-bold text-medical-700 shadow-card flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  AI Scribe Active
+                </div>
+              </div>
+              <div className="bg-white p-5 border-t border-slate-100">
+                <h3 className="text-slate-800 font-bold text-sm mb-1">Doctor-Patient Consultation</h3>
+                <p className="text-slate-500 text-xs leading-relaxed">The AI scribe listens and documents in real-time. The doctor focuses entirely on the patient — never on a keyboard.</p>
+              </div>
+            </div>
+
+            {/* Card 2: Hospital / Multi-Provider Group */}
+            <div className="relative overflow-hidden rounded-2xl shadow-card-lg group hover:-translate-y-1 transition-all duration-300">
+              <div className="h-52 bg-gradient-to-br from-teal-50 to-teal-100 relative flex items-center justify-center">
+                <svg viewBox="0 0 320 200" className="w-full h-full absolute inset-0" fill="none">
+                  <defs>
+                    <linearGradient id="bg2" x1="0" y1="0" x2="320" y2="200" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#f0fdfa"/>
+                      <stop offset="1" stopColor="#ccfbf1"/>
+                    </linearGradient>
+                  </defs>
+                  <rect width="320" height="200" fill="url(#bg2)"/>
+                  {/* Sky */}
+                  <rect x="0" y="0" width="320" height="120" fill="#e0f2fe" opacity="0.4"/>
+                  {/* Hospital building */}
+                  <rect x="80" y="50" width="160" height="130" rx="4" fill="white" stroke="#bae6fd" strokeWidth="2"/>
+                  {/* Hospital floors */}
+                  <rect x="80" y="100" width="160" height="1.5" fill="#bae6fd"/>
+                  <rect x="80" y="130" width="160" height="1.5" fill="#bae6fd"/>
+                  {/* Windows floor 1 */}
+                  <rect x="95" y="60" width="25" height="25" rx="2" fill="#7dd3fc"/>
+                  <rect x="130" y="60" width="25" height="25" rx="2" fill="#7dd3fc"/>
+                  <rect x="165" y="60" width="25" height="25" rx="2" fill="#7dd3fc"/>
+                  <rect x="200" y="60" width="25" height="25" rx="2" fill="#bfdbfe"/>
+                  {/* Windows floor 2 */}
+                  <rect x="95" y="108" width="25" height="18" rx="2" fill="#a5f3fc"/>
+                  <rect x="130" y="108" width="25" height="18" rx="2" fill="#a5f3fc"/>
+                  <rect x="200" y="108" width="25" height="18" rx="2" fill="#a5f3fc"/>
+                  {/* Cross on building */}
+                  <rect x="152" y="108" width="16" height="5" rx="2.5" fill="#0d9488"/>
+                  <rect x="157" y="103" width="6" height="15" rx="3" fill="#0d9488"/>
+                  {/* Door */}
+                  <rect x="142" y="150" width="36" height="30" rx="3" fill="#93c5fd"/>
+                  <circle cx="155" cy="166" r="2" fill="#1e40af"/>
+                  {/* Flag */}
+                  <line x1="160" y1="20" x2="160" y2="50" stroke="#cbd5e1" strokeWidth="2"/>
+                  <rect x="160" y="20" width="24" height="14" rx="2" fill="#0d9488"/>
+                  {/* Ground */}
+                  <rect x="0" y="175" width="320" height="25" fill="#d1fae5" opacity="0.5"/>
+                  {/* Trees */}
+                  <ellipse cx="52" cy="155" rx="22" ry="28" fill="#6ee7b7"/>
+                  <rect x="49" y="168" width="6" height="12" rx="2" fill="#6b7280"/>
+                  <ellipse cx="268" cy="155" rx="22" ry="28" fill="#6ee7b7"/>
+                  <rect x="265" y="168" width="6" height="12" rx="2" fill="#6b7280"/>
+                  {/* AI badge */}
+                  <rect x="210" y="35" width="70" height="22" rx="11" fill="white" stroke="#0d9488" strokeWidth="1.5"/>
+                  <circle cx="224" cy="46" r="5" fill="#0d9488"/>
+                  <rect x="232" y="42" width="40" height="3" rx="1.5" fill="#0d9488"/>
+                  <rect x="232" y="47" width="28" height="2.5" rx="1.25" fill="#99f6e4"/>
+                </svg>
+                <div className="absolute top-3 right-3 bg-white/90 rounded-full px-3 py-1 text-xs font-bold text-teal-700 shadow-card flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
+                  Multi-Site Ready
+                </div>
+              </div>
+              <div className="bg-white p-5 border-t border-slate-100">
+                <h3 className="text-slate-800 font-bold text-sm mb-1">Multi-Provider Hospital Groups</h3>
+                <p className="text-slate-500 text-xs leading-relaxed">From single-physician practices to 50-provider hospital networks — Medaea scales to every size with unified workflows.</p>
+              </div>
+            </div>
+
+            {/* Card 3: AI Dashboard / Nurse + Patient */}
+            <div className="relative overflow-hidden rounded-2xl shadow-card-lg group hover:-translate-y-1 transition-all duration-300">
+              <div className="h-52 bg-gradient-to-br from-violet-50 to-violet-100 relative flex items-center justify-center">
+                <svg viewBox="0 0 320 200" className="w-full h-full absolute inset-0" fill="none">
+                  <defs>
+                    <linearGradient id="bg3" x1="0" y1="0" x2="320" y2="200" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#f5f3ff"/>
+                      <stop offset="1" stopColor="#ede9fe"/>
+                    </linearGradient>
+                  </defs>
+                  <rect width="320" height="200" fill="url(#bg3)"/>
+                  {/* Dashboard frame */}
+                  <rect x="20" y="20" width="280" height="160" rx="12" fill="white" stroke="#ddd6fe" strokeWidth="2"/>
+                  {/* Header bar */}
+                  <rect x="20" y="20" width="280" height="32" rx="12" fill="#7c3aed"/>
+                  <rect x="20" y="38" width="280" height="14" fill="#7c3aed"/>
+                  <rect x="32" y="30" width="80" height="8" rx="4" fill="white" opacity="0.4"/>
+                  <circle cx="270" cy="34" r="6" fill="white" opacity="0.3"/>
+                  <circle cx="255" cy="34" r="6" fill="white" opacity="0.2"/>
+                  {/* KPI cards row */}
+                  <rect x="30" y="60" width="58" height="36" rx="6" fill="#f5f3ff" stroke="#ddd6fe" strokeWidth="1"/>
+                  <rect x="35" y="66" width="32" height="5" rx="2.5" fill="#7c3aed" opacity="0.5"/>
+                  <rect x="35" y="75" width="40" height="8" rx="4" fill="#7c3aed"/>
+                  <rect x="96" y="60" width="58" height="36" rx="6" fill="#f0fdfa" stroke="#99f6e4" strokeWidth="1"/>
+                  <rect x="101" y="66" width="32" height="5" rx="2.5" fill="#0d9488" opacity="0.5"/>
+                  <rect x="101" y="75" width="40" height="8" rx="4" fill="#0d9488"/>
+                  <rect x="162" y="60" width="58" height="36" rx="6" fill="#eff6ff" stroke="#bfdbfe" strokeWidth="1"/>
+                  <rect x="167" y="66" width="32" height="5" rx="2.5" fill="#1d4ed8" opacity="0.5"/>
+                  <rect x="167" y="75" width="40" height="8" rx="4" fill="#1d4ed8"/>
+                  <rect x="228" y="60" width="58" height="36" rx="6" fill="#f0fdf4" stroke="#bbf7d0" strokeWidth="1"/>
+                  <rect x="233" y="66" width="32" height="5" rx="2.5" fill="#16a34a" opacity="0.5"/>
+                  <rect x="233" y="75" width="40" height="8" rx="4" fill="#16a34a"/>
+                  {/* Chart area */}
+                  <rect x="30" y="105" width="175" height="60" rx="8" fill="#faf5ff" stroke="#ddd6fe" strokeWidth="1"/>
+                  {/* Bar chart inside */}
+                  <rect x="45" y="125" width="14" height="30" rx="3" fill="#c4b5fd"/>
+                  <rect x="65" y="118" width="14" height="37" rx="3" fill="#c4b5fd"/>
+                  <rect x="85" y="110" width="14" height="45" rx="3" fill="#a78bfa"/>
+                  <rect x="105" y="107" width="14" height="48" rx="3" fill="#7c3aed"/>
+                  <rect x="125" y="103" width="14" height="52" rx="3" fill="#7c3aed"/>
+                  <rect x="145" y="100" width="14" height="55" rx="3" fill="#6d28d9"/>
+                  {/* Patient list */}
+                  <rect x="213" y="105" width="75" height="60" rx="8" fill="#f8fafc" stroke="#e2e8f0" strokeWidth="1"/>
+                  <rect x="220" y="112" width="35" height="4" rx="2" fill="#334155" opacity="0.6"/>
+                  <rect x="220" y="120" width="60" height="3" rx="1.5" fill="#94a3b8"/>
+                  <rect x="220" y="127" width="60" height="3" rx="1.5" fill="#94a3b8"/>
+                  <rect x="220" y="134" width="50" height="3" rx="1.5" fill="#94a3b8"/>
+                  <rect x="220" y="141" width="55" height="3" rx="1.5" fill="#94a3b8"/>
+                  <rect x="220" y="148" width="40" height="3" rx="1.5" fill="#94a3b8"/>
+                </svg>
+                <div className="absolute top-3 right-3 bg-white/90 rounded-full px-3 py-1 text-xs font-bold text-violet-700 shadow-card flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-violet-500 animate-pulse" />
+                  Live Dashboard
+                </div>
+              </div>
+              <div className="bg-white p-5 border-t border-slate-100">
+                <h3 className="text-slate-800 font-bold text-sm mb-1">Real-Time Revenue Intelligence</h3>
+                <p className="text-slate-500 text-xs leading-relaxed">Live dashboards show every claim, every denial, every revenue opportunity — updated in real-time as encounters are completed.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Medical use-case strip */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { icon: "🩺", title: "Primary Care", desc: "Family physicians & internists using AI documentation daily", color: "bg-blue-50 border-blue-100" },
+              { icon: "🦴", title: "Specialty Groups", desc: "Ortho, neuro, derm, cardiology — specialty templates ready", color: "bg-teal-50 border-teal-100" },
+              { icon: "🧠", title: "Behavioral Health", desc: "Mental health documentation with privacy-first AI assistance", color: "bg-violet-50 border-violet-100" },
+              { icon: "🏥", title: "Hospital Systems", desc: "Enterprise-grade AI for multi-site health networks", color: "bg-emerald-50 border-emerald-100" },
+            ].map((c) => (
+              <div key={c.title} className={`${c.color} rounded-xl border p-4 flex items-start gap-3 hover:shadow-card-hover hover:-translate-y-0.5 transition-all duration-200`}>
+                <span className="text-2xl">{c.icon}</span>
+                <div>
+                  <div className="text-slate-800 font-bold text-xs mb-1">{c.title}</div>
+                  <div className="text-slate-500 text-xs leading-relaxed">{c.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── How AI helps doctors ── */}
       <section className="section-pad bg-white">
         <div className="container-xl">
