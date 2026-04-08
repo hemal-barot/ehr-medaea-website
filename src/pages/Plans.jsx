@@ -279,10 +279,9 @@ export default function Plans() {
                   ))}
                 </tr>
               </thead>
-              <tbody>
-                {COMPARISON_TABLE.map((section) => (
-                  <>
-                    <tr key={section.category} className="border-b border-white/5">
+              {COMPARISON_TABLE.map((section) => (
+                  <tbody key={section.category}>
+                    <tr className="border-b border-white/5">
                       <td colSpan={4} className="py-3 px-6">
                         <span className="badge-teal text-xs">{section.category}</span>
                       </td>
@@ -298,9 +297,8 @@ export default function Plans() {
                         <td className="py-3.5 px-4"><CellValue value={row.enterprise} /></td>
                       </tr>
                     ))}
-                  </>
+                  </tbody>
                 ))}
-              </tbody>
             </table>
           </div>
         </div>
