@@ -1,251 +1,273 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const APP_URL = import.meta.env.VITE_APP_URL || "http://localhost:5000";
 
-const PARTNERS = [
-  { name: "Butterfly", src: "https://www.medaea.ai/wp-content/uploads/2025/11/65578940f279ba96fa53d0a1_butterfly.svg" },
-  { name: "Keplr", src: "https://www.medaea.ai/wp-content/uploads/2025/11/65578870a6700c33ae717fc9_keplr-logo-white-bg-1.svg" },
-  { name: "BHW", src: "https://www.medaea.ai/wp-content/uploads/2025/11/655789cb06fc48c4c9712032_bhw.svg" },
-  { name: "MEI", src: "https://www.medaea.ai/wp-content/uploads/2025/11/65565de7116a69645b8c57bb_MEI-Logo-1.svg" },
-  { name: "Easterseals", src: "https://www.medaea.ai/wp-content/uploads/2025/11/65565c03cd0fa927524c5adc_easterseals-1.svg" },
-  { name: "Proliance", src: "https://www.medaea.ai/wp-content/uploads/2025/11/65564e9a6b02ff7139375eec_proliance.svg" },
-  { name: "EliteDNA", src: "https://www.medaea.ai/wp-content/uploads/2025/11/678ac2a9175b8a9b23003250_eliteDNA.svg" },
+const STATS = [
+  { value: "95%+", label: "Clean claim rate" },
+  { value: "45%", label: "Less admin burden" },
+  { value: "62%", label: "Fewer denials" },
+  { value: "30–40%", label: "Revenue lift" },
 ];
 
-const PROBLEMS = [
-  { icon: "📋", title: "Hours of manual documentation and charting", desc: "Clinicians spend 49% of their workday on the EHR — 4+ hours per day on documentation, coding, and billing tasks." },
-  { icon: "❌", title: "High denial rates and revenue leakage", desc: "Errors and delays in coding and claims lead to avoidable financial loss and delayed reimbursements." },
-  { icon: "🔗", title: "Siloed EMRs, billing systems, claim engines", desc: "Disconnected systems force teams to jump between platforms, losing efficiency and creating data gaps." },
-  { icon: "⏰", title: "Administrative overhead stealing focus from care", desc: "Routine clerical tasks drain clinical time and reduce quality of patient care and outcomes." },
+const PARTNERS = [
+  "Butterfly", "Keplr Health", "BHW Group", "MEI Research",
+  "Easterseals", "Proliance", "EliteDNA", "Axis Health",
+];
+
+const AGENTS = [
+  {
+    icon: "🎙️",
+    name: "Clinical Scribe",
+    desc: "Ambient listening → structured SOAP notes → ICD/CPT codes. Instant, accurate, compliant.",
+    color: "from-cyan-500/20 to-cyan-600/5",
+    border: "border-cyan-500/20",
+  },
+  {
+    icon: "💊",
+    name: "Billing & Coding",
+    desc: "600+ payer rules engine. HCC, NCCI edits, zero compliance risk, maximum revenue capture.",
+    color: "from-teal-500/20 to-teal-600/5",
+    border: "border-teal-500/20",
+  },
+  {
+    icon: "✅",
+    name: "Eligibility Agent",
+    desc: "Pre-visit insurance verification and prior auth — fully automated before the patient arrives.",
+    color: "from-emerald-500/20 to-emerald-600/5",
+    border: "border-emerald-500/20",
+  },
+  {
+    icon: "🛡️",
+    name: "Claims Integrity",
+    desc: "Scrubs every claim, predicts denials, applies payer-specific rules before submission.",
+    color: "from-cyan-500/20 to-blue-600/5",
+    border: "border-cyan-500/20",
+  },
+  {
+    icon: "📅",
+    name: "Scheduling Agent",
+    desc: "Auto-detects follow-ups, books appointments, sends patient reminders. Zero admin touch.",
+    color: "from-teal-500/20 to-cyan-600/5",
+    border: "border-teal-500/20",
+  },
 ];
 
 const SOLUTIONS = [
   {
-    title: "Real-time Clinical Documentation",
-    desc: "As the patient encounter happens, our AI scribe listens, understands specialty terminology, creates structured notes and suggests ICD/CPT codes — clinician reviews, signs, done.",
-    img: "https://www.medaea.ai/wp-content/uploads/2025/11/Real-time-Clinical-Documentation.jpg",
+    badge: "Documentation",
+    title: "Real-Time Clinical Documentation",
+    desc: "Your AI scribe listens to every encounter, understands specialty terminology, drafts structured SOAP notes, and proposes precise ICD/CPT codes — all before you leave the room. Clinician reviews, signs, done.",
+    stats: [{ v: "4+ hrs", l: "Saved per day" }, { v: "< 30s", l: "Note generation" }],
   },
   {
-    title: "Autonomous Revenue Cycle",
-    desc: "From eligibility checks to claims submission, coding validation to denial prevention — our AI agents automate the entire revenue cycle while you stay in control of decisions.",
-    img: "https://www.medaea.ai/wp-content/uploads/2025/11/Autonomous-Revenue-Cycle.jpg",
+    badge: "Revenue Cycle",
+    title: "Autonomous Revenue Cycle Management",
+    desc: "From eligibility to claims submission to denial prevention — Medaea's AI agents automate your entire RCM while keeping your team in control of key decisions. No more manual coding errors.",
+    stats: [{ v: "95%+", l: "First-pass rate" }, { v: "62%", l: "Fewer denials" }],
   },
   {
-    title: "Intelligent Workflows for Specialty Practices",
-    desc: "Every specialty has unique workflow. Medaea supports orthopedics, dermatology, behavioral health, ambulatory surgery and more with tailored templates, clinical agents, and built-in compliance guardrails.",
-    img: "https://www.medaea.ai/wp-content/uploads/2025/11/Intelligent-Workflows-for-Specialty-Practices.jpg",
+    badge: "Workflows",
+    title: "Intelligent Specialty Workflows",
+    desc: "Pre-built for 10+ specialties — orthopedics, dermatology, behavioral health, ambulatory surgery, and more. Tailored templates, specialty-specific coding rules, and compliance guardrails out of the box.",
+    stats: [{ v: "10+", l: "Specialties" }, { v: "< 7 days", l: "Go-live time" }],
   },
-];
-
-const PROBLEMS_DETAIL = [
-  { title: "Lost Revenue from Coding Errors", href: "/lost-revenue-from-coding-errors" },
-  { title: "Delayed Reimbursements or Denials", href: "/delayed-reimbursements-or-denials" },
-  { title: "Increased Burnout & Less Patient Time", href: "/increased-burnout-less-patient-time" },
-  { title: "Fragmented Workflows Across Systems", href: "/fragmented-workflows-across-systems" },
-  { title: "Administrative Heavy Staffing Costs", href: "/administrative-heavy-staffing-costs" },
-];
-
-const AGENTS = [
-  { name: "Clinical Scribe Agent", desc: "Ambient documentation, note creation, medical context understanding", icon: "🎙️" },
-  { name: "Billing & Coding Agent", desc: "ICD/CPT/HCC coding, NCCI edits, compliance guardrails", icon: "💰" },
-  { name: "Eligibility Agent", desc: "Insurance + authorization validation before visits", icon: "✅" },
-  { name: "Claims Integrity Agent", desc: "Scrubbing, denial prediction, payer rules automation", icon: "🛡️" },
-  { name: "Scheduling Agent", desc: "Follow-up detection, calendar integration, patient reminders", icon: "📅" },
-];
-
-const METRICS = [
-  { value: "95%+", label: "First-pass clean claim rate" },
-  { value: "30–40%", label: "Increase in revenue capture" },
-  { value: "45%", label: "Reduction in admin burden for providers" },
-  { value: "62%", label: "Fewer denials with real-time coding intelligence" },
 ];
 
 const TESTIMONIALS = [
   {
-    quote: "Since switching to Medaea, our clinicians regained 2 hours per day and our revenue increased significantly.",
+    quote: "Medaea gave our clinicians back 2 hours every day. Our revenue increased 35% in the first quarter.",
     author: "Practice Administrator",
-    role: "Multi-specialty clinic",
+    role: "Multi-specialty Clinic, 12 Providers",
+    stars: 5,
   },
   {
-    quote: "The AI scribe alone paid for the entire system in the first month. We've never looked back.",
+    quote: "The AI scribe paid for itself in the first month. Documentation went from a nightmare to invisible.",
     author: "Dr. K. Thompson",
     role: "Behavioral Health Practice",
+    stars: 5,
   },
 ];
+
+function AnimatedCounter({ target, suffix = "" }) {
+  const [count, setCount] = useState(0);
+  const numericTarget = parseFloat(target);
+
+  useEffect(() => {
+    const duration = 1500;
+    const steps = 60;
+    const increment = numericTarget / steps;
+    let current = 0;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= numericTarget) {
+        setCount(numericTarget);
+        clearInterval(timer);
+      } else {
+        setCount(Math.floor(current));
+      }
+    }, duration / steps);
+    return () => clearInterval(timer);
+  }, [numericTarget]);
+
+  return <>{count}{suffix}</>;
+}
 
 export default function Home() {
   return (
     <>
       {/* ── Hero ── */}
-      <section className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-gradient-hero">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl" />
-          <div className="absolute top-1/3 -left-40 w-80 h-80 bg-purple-600/20 rounded-full blur-3xl" />
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="max-w-4xl">
-            <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/30 rounded-full px-4 py-1.5 mb-6">
-              <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" />
-              <span className="text-blue-300 text-sm font-medium">Join 200+ practices already saving time and increasing revenue</span>
-            </div>
-
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6">
-              AI-Powered{" "}
-              <span className="gradient-text">EMR Software</span>
-              {" "}That Gives You{" "}
-              <span className="gradient-text">10+ Hours</span>
-              {" "}Back Every Week
-            </h1>
-
-            <p className="text-lg sm:text-xl text-gray-300 leading-relaxed mb-8 max-w-2xl">
-              Medaea is the intelligent electronic health records system built for modern medical practices.
-              Our AI medical scribe handles documentation while you focus on patients.
-              Automated billing captures every dollar.{" "}
-              <span className="text-white font-medium">HIPAA-compliant and ONC-certified.</span>
-            </p>
-
-            <div className="flex flex-wrap gap-4">
-              <a href={APP_URL} className="gradient-btn px-8 py-4 text-base rounded-xl inline-flex items-center gap-2">
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 448 512"><path d="M400 0H48C22.4 0 0 22.4 0 48v416c0 25.6 22.4 48 48 48h352c25.6 0 48-22.4 48-48V48c0-25.6-22.4-48-48-48zM128 435.2c0 6.4-6.4 12.8-12.8 12.8H76.8c-6.4 0-12.8-6.4-12.8-12.8v-38.4c0-6.4 6.4-12.8 12.8-12.8h38.4c6.4 0 12.8 6.4 12.8 12.8v38.4zm0-128c0 6.4-6.4 12.8-12.8 12.8H76.8c-6.4 0-12.8-6.4-12.8-12.8v-38.4c0-6.4 6.4-12.8 12.8-12.8h38.4c6.4 0 12.8 6.4 12.8 12.8v38.4zm128 128c0 6.4-6.4 12.8-12.8 12.8h-38.4c-6.4 0-12.8-6.4-12.8-12.8v-38.4c0-6.4 6.4-12.8 12.8-12.8h38.4c6.4 0 12.8 6.4 12.8 12.8v38.4zm128 128c0 6.4-6.4 12.8-12.8 12.8h-38.4c-6.4 0-12.8-6.4-12.8-12.8V268.8c0-6.4 6.4-12.8 12.8-12.8h38.4c6.4 0 12.8 6.4 12.8 12.8v166.4zm0-256c0 6.4-6.4 12.8-12.8 12.8H76.8c-6.4 0-12.8-6.4-12.8-12.8V76.8C64 70.4 70.4 64 76.8 64h294.4c6.4 0 12.8 6.4 12.8 12.8v102.4z"/></svg>
-                Calculate Your Savings
-              </a>
-              <a href={APP_URL} className="px-8 py-4 text-base rounded-xl border border-white/20 text-white hover:bg-white/10 transition-all duration-200 inline-flex items-center gap-2">
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 640 512"><path d="M592 0H48A48 48 0 0 0 0 48v320a48 48 0 0 0 48 48h240v32H112a16 16 0 0 0-16 16v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16v-32a16 16 0 0 0-16-16H352v-32h240a48 48 0 0 0 48-48V48a48 48 0 0 0-48-48zm-16 352H64V64h512z"/></svg>
-                Watch 2-Min Demo
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Partners / Featured In ── */}
-      <section className="py-12 border-y border-white/10 bg-navy-800/40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-gray-400 text-sm font-medium uppercase tracking-widest mb-8">As Featured In / Trusted By</p>
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
-            {PARTNERS.map((p) => (
-              <img
-                key={p.name}
-                src={p.src}
-                alt={p.name}
-                className="h-8 md:h-10 object-contain opacity-60 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
-                onError={(e) => { e.target.style.display = "none"; }}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── About Banner ── */}
-      <section className="section-pad bg-navy-900">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Medaea.ai — <span className="gradient-text">Autonomous Healthcare Operating System</span>
-            </h2>
-            <p className="text-gray-300 text-lg leading-relaxed">
-              Built for modern medical practices, Medaea.ai fuses ambient clinical documentation,
-              autonomous billing workflows, and high-integrity AI intelligence into one unified platform
-              — so providers spend more time with patients and less time with paperwork.
-            </p>
-            <p className="text-blue-400 font-medium text-lg mt-4 italic">
-              "AI that cares so clinicians can care."
-            </p>
-            <a href={APP_URL} className="gradient-btn inline-block mt-8 px-8 py-3 rounded-xl text-base">
-              Request Demo
-            </a>
-          </div>
-
-          {/* Platform image */}
-          <div className="rounded-2xl overflow-hidden border border-white/10">
-            <img
-              src="https://www.medaea.ai/wp-content/uploads/2025/11/platform-4-1-1.jpg"
-              alt="Medaea Platform"
-              className="w-full object-cover"
-              onError={(e) => { e.target.style.display = "none"; }}
+      <section className="relative min-h-screen flex items-center pt-20 overflow-hidden hero-bg">
+        {/* Animated data points */}
+        <div className="absolute inset-0 pointer-events-none">
+          {[
+            { top: "15%", left: "10%", delay: "0s", size: "6px" },
+            { top: "30%", right: "8%", delay: "1.5s", size: "4px" },
+            { top: "65%", left: "5%", delay: "3s", size: "5px" },
+            { top: "80%", right: "15%", delay: "0.8s", size: "3px" },
+            { top: "45%", left: "88%", delay: "2s", size: "6px" },
+          ].map((p, i) => (
+            <div
+              key={i}
+              className="data-point"
+              style={{
+                top: p.top, left: p.left, right: p.right,
+                width: p.size, height: p.size,
+                animationDelay: p.delay,
+              }}
             />
-          </div>
+          ))}
+          {/* Grid overlay */}
+          <div
+            className="absolute inset-0 opacity-[0.03]"
+            style={{
+              backgroundImage: "linear-gradient(rgba(6,182,212,1) 1px, transparent 1px), linear-gradient(90deg, rgba(6,182,212,1) 1px, transparent 1px)",
+              backgroundSize: "80px 80px",
+            }}
+          />
         </div>
-      </section>
 
-      {/* ── Problems ── */}
-      <section className="section-pad bg-navy-800/30">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Physicians Are Drowning in <span className="gradient-text">Paperwork</span>, Not Patients
-            </h2>
-            <p className="text-gray-300 text-lg max-w-2xl mx-auto">
-              The average physician spends 49% of their workday on the EHR (JAMA, 2020) — that's 4+ hours per day
-              on documentation, coding, and billing tasks. This isn't what you went to medical school for.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {PROBLEMS.map((p) => (
-              <div key={p.title} className="card-dark glow-card p-6 rounded-2xl hover:bg-navy-700/50 transition-all">
-                <div className="text-3xl mb-4">{p.icon}</div>
-                <h3 className="text-white font-semibold mb-2">{p.title}</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">{p.desc}</p>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div className="animate-fade-in">
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 badge-teal mb-6">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                200+ practices already transforming care
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* ── Solutions ── */}
-      <section className="section-pad bg-navy-900">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-14">
-            <p className="text-blue-400 font-medium uppercase tracking-widest text-sm mb-3">Our Solutions</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-white">
-              The Only EMR Built from Scratch with <span className="gradient-text">AI at Its Core</span>
-            </h2>
-            <p className="text-gray-300 mt-4 max-w-2xl mx-auto">
-              We built a platform that treats documentation, billing, and workflow automation as part of one seamless experience.
-            </p>
-          </div>
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-[1.05] mb-6 tracking-tight">
+                The AI-Native{" "}
+                <span className="gradient-text-warm">EHR</span>{" "}
+                Built for{" "}
+                <span className="gradient-text">Modern Care</span>
+              </h1>
 
-          <div className="space-y-16">
-            {SOLUTIONS.map((s, i) => (
-              <div key={s.title} className={`flex flex-col lg:flex-row items-center gap-10 ${i % 2 === 1 ? "lg:flex-row-reverse" : ""}`}>
-                <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-white mb-4">{s.title}</h3>
-                  <p className="text-gray-300 text-lg leading-relaxed">{s.desc}</p>
-                  <a href={APP_URL} className="gradient-btn inline-block mt-6 px-6 py-3 rounded-lg text-sm">
-                    Learn More →
-                  </a>
-                </div>
-                <div className="flex-1 rounded-2xl overflow-hidden border border-white/10">
-                  <img
-                    src={s.img}
-                    alt={s.title}
-                    className="w-full h-64 object-cover"
-                    onError={(e) => { e.target.style.display = "none"; }}
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+              <p className="text-lg text-gray-400 leading-relaxed mb-8 max-w-lg">
+                Medaea unifies ambient documentation, autonomous billing, and intelligent clinical workflows into one AI-powered platform. Stop charting. Start caring.
+              </p>
 
-      {/* ── What We Solve ── */}
-      <section className="section-pad bg-navy-800/30">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <p className="text-blue-400 font-medium uppercase tracking-widest text-sm mb-3">What We Solve</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-white">The Broken Reality of Today's EMRs</h2>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {PROBLEMS_DETAIL.map((p) => (
-              <div key={p.title} className="card-dark p-5 rounded-xl flex items-center gap-3 hover:bg-navy-700/50 transition-all">
-                <div className="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center flex-shrink-0">
-                  <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              <div className="flex flex-wrap gap-4 mb-12">
+                <a href={APP_URL} className="gradient-btn px-8 py-4 text-base rounded-xl inline-flex items-center gap-2 font-bold">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
+                  Get Started Free
+                </a>
+                <a href={APP_URL} className="btn-outline px-8 py-4 text-base rounded-xl inline-flex items-center gap-2">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Watch Demo
+                </a>
+              </div>
+
+              {/* Trust signals */}
+              <div className="flex flex-wrap items-center gap-4">
+                {["HIPAA Compliant", "ONC Certified", "< 7 Day Setup"].map((badge) => (
+                  <div key={badge} className="flex items-center gap-1.5 text-gray-500 text-xs">
+                    <svg className="w-3.5 h-3.5 text-cyan-500" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                    {badge}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* AI Pulse Visual */}
+            <div className="relative flex items-center justify-center">
+              <div className="relative w-72 h-72 sm:w-96 sm:h-96">
+                {/* Pulse rings */}
+                <div className="ai-ring inset-16" />
+                <div className="ai-ring inset-8" />
+                <div className="ai-ring inset-0" />
+
+                {/* Center orb */}
+                <div className="absolute inset-1/4 rounded-full bg-gradient-to-br from-cyan-500 to-teal-600 flex items-center justify-center shadow-[0_0_80px_rgba(6,182,212,0.5)]">
+                  <div className="text-center">
+                    <div className="text-3xl sm:text-4xl font-extrabold text-white">AI</div>
+                    <div className="text-cyan-200 text-xs font-semibold mt-1">ENGINE</div>
+                  </div>
                 </div>
-                <span className="text-gray-300 text-sm font-medium">{p.title}</span>
+
+                {/* Orbiting feature nodes */}
+                {[
+                  { label: "Scribe", angle: 0 },
+                  { label: "Billing", angle: 72 },
+                  { label: "Coding", angle: 144 },
+                  { label: "Claims", angle: 216 },
+                  { label: "Auth", angle: 288 },
+                ].map((node) => {
+                  const rad = (node.angle - 90) * (Math.PI / 180);
+                  const r = 45;
+                  const x = 50 + r * Math.cos(rad);
+                  const y = 50 + r * Math.sin(rad);
+                  return (
+                    <div
+                      key={node.label}
+                      className="absolute flex items-center justify-center"
+                      style={{
+                        left: `${x}%`, top: `${y}%`,
+                        transform: "translate(-50%, -50%)",
+                      }}
+                    >
+                      <div className="px-2.5 py-1.5 rounded-lg bg-navy-800/90 border border-cyan-500/30 text-cyan-300 text-xs font-semibold whitespace-nowrap backdrop-blur-sm shadow-[0_0_12px_rgba(6,182,212,0.2)]">
+                        {node.label}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Stats bar ── */}
+      <section className="py-12 border-y border-cyan-500/10" style={{ background: "rgba(6,182,212,0.03)" }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {STATS.map((s) => (
+              <div key={s.label} className="text-center">
+                <div className="text-3xl sm:text-4xl font-extrabold stat-shine mb-1">{s.value}</div>
+                <div className="text-gray-500 text-sm">{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Partners ticker ── */}
+      <section className="py-10 overflow-hidden bg-navy-950">
+        <p className="text-center text-gray-600 text-xs font-semibold uppercase tracking-widest mb-6">Trusted by leading practices</p>
+        <div className="relative overflow-hidden">
+          <div className="ticker-track">
+            {[...PARTNERS, ...PARTNERS].map((name, i) => (
+              <div key={i} className="flex items-center gap-2 px-6 py-2 rounded-full border border-white/6 bg-white/2 text-gray-500 text-sm font-medium whitespace-nowrap">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-500/50" />
+                {name}
               </div>
             ))}
           </div>
@@ -254,40 +276,113 @@ export default function Home() {
 
       {/* ── AI Agents ── */}
       <section className="section-pad bg-navy-900">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              <span className="gradient-text">Autonomous Healthcare Agents</span>
+        <div className="container-xl">
+          <div className="text-center mb-16">
+            <span className="badge-teal mb-4 inline-block">Autonomous Agents</span>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
+              5 AI Agents Working{" "}
+              <span className="gradient-text">24/7 For Your Practice</span>
             </h2>
-            <p className="text-gray-300 text-lg max-w-2xl mx-auto">
-              Intelligent agents working in the background so your team can focus on what matters — patient care.
+            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+              Intelligent agents operating in the background — so your team focuses on patients, not paperwork.
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
-            {AGENTS.map((a) => (
-              <div key={a.name} className="card-dark glow-card p-6 rounded-2xl text-center hover:bg-navy-700/50 transition-all">
-                <div className="text-4xl mb-4">{a.icon}</div>
-                <h3 className="text-white font-semibold text-sm mb-2">{a.name}</h3>
-                <p className="text-gray-400 text-xs leading-relaxed">{a.desc}</p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+            {AGENTS.map((a, i) => (
+              <div
+                key={a.name}
+                className={`relative card-dark glow-card p-6 gradient-border`}
+                style={{ animationDelay: `${i * 0.1}s` }}
+              >
+                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${a.color} border ${a.border} flex items-center justify-center text-2xl mb-4`}>
+                  {a.icon}
+                </div>
+                <h3 className="text-white font-bold text-sm mb-2">{a.name}</h3>
+                <p className="text-gray-500 text-xs leading-relaxed">{a.desc}</p>
+
+                {/* Active indicator */}
+                <div className="absolute top-4 right-4 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                  <span className="text-cyan-600 text-xs">Active</span>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Metrics ── */}
-      <section className="section-pad" style={{ background: "linear-gradient(135deg, #1a1f3d 0%, #0f1629 100%)" }}>
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Measurable Impact Metrics That Redefine <span className="gradient-text">Healthcare Efficiency</span>
+      {/* ── Solutions ── */}
+      <section className="section-pad" style={{ background: "radial-gradient(ellipse at center, rgba(6,182,212,0.04) 0%, #06090f 60%)" }}>
+        <div className="container-xl">
+          <div className="text-center mb-16">
+            <span className="badge-teal mb-4 inline-block">Our Platform</span>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">
+              The Only EHR Built{" "}
+              <span className="gradient-text">AI-Native From Day One</span>
             </h2>
           </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-            {METRICS.map((m) => (
-              <div key={m.label} className="text-center p-8 card-dark glow-card rounded-2xl">
-                <div className="text-4xl md:text-5xl font-extrabold gradient-text mb-3">{m.value}</div>
-                <p className="text-gray-300 text-sm leading-snug">{m.label}</p>
+
+          <div className="space-y-20">
+            {SOLUTIONS.map((s, i) => (
+              <div
+                key={s.title}
+                className={`grid grid-cols-1 lg:grid-cols-2 gap-12 items-center ${
+                  i % 2 === 1 ? "lg:grid-flow-dense" : ""
+                }`}
+              >
+                <div className={i % 2 === 1 ? "lg:col-start-2" : ""}>
+                  <span className="badge-teal mb-4 inline-block">{s.badge}</span>
+                  <h3 className="text-3xl font-extrabold text-white mb-4 leading-tight">{s.title}</h3>
+                  <p className="text-gray-400 leading-relaxed text-lg mb-6">{s.desc}</p>
+                  <div className="flex gap-6 mb-8">
+                    {s.stats.map((st) => (
+                      <div key={st.l} className="text-center">
+                        <div className="text-2xl font-extrabold stat-shine">{st.v}</div>
+                        <div className="text-gray-500 text-xs mt-1">{st.l}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <a href={APP_URL} className="gradient-btn inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold">
+                    Learn More
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </a>
+                </div>
+
+                {/* Visual panel */}
+                <div className={`card-glass gradient-border p-8 rounded-2xl ${i % 2 === 1 ? "lg:col-start-1 lg:row-start-1" : ""}`}>
+                  <div className="space-y-3">
+                    {/* Simulated EHR UI */}
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-teal-500 flex items-center justify-center text-xs font-bold text-white">AI</div>
+                      <div>
+                        <div className="text-white text-sm font-semibold">Medaea {s.badge} Agent</div>
+                        <div className="flex items-center gap-1.5 text-xs text-cyan-400">
+                          <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                          Processing...
+                        </div>
+                      </div>
+                    </div>
+                    {[80, 60, 75, 45].map((w, j) => (
+                      <div key={j} className="flex items-center gap-3">
+                        <div className="w-2 h-2 rounded-full bg-cyan-500/60 flex-shrink-0" />
+                        <div className="flex-1 h-2.5 rounded-full bg-white/5">
+                          <div
+                            className="h-full rounded-full bg-gradient-to-r from-cyan-600 to-teal-500"
+                            style={{ width: `${w}%`, opacity: 1 - j * 0.15 }}
+                          />
+                        </div>
+                        <div className="text-gray-600 text-xs w-8 text-right">{w}%</div>
+                      </div>
+                    ))}
+                    <div className="mt-4 p-3 rounded-xl bg-cyan-500/5 border border-cyan-500/15">
+                      <div className="text-cyan-300 text-xs font-semibold mb-1">✓ Task Complete</div>
+                      <div className="text-gray-500 text-xs">Processed in 1.2s · Ready for review</div>
+                    </div>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -295,19 +390,33 @@ export default function Home() {
       </section>
 
       {/* ── Testimonials ── */}
-      <section className="section-pad bg-navy-800/30">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white">What Practices Are Saying</h2>
+      <section className="section-pad bg-navy-900">
+        <div className="container-xl">
+          <div className="text-center mb-14">
+            <span className="badge-teal mb-4 inline-block">Social Proof</span>
+            <h2 className="text-4xl font-extrabold text-white">
+              What Practices Are <span className="gradient-text">Saying</span>
+            </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {TESTIMONIALS.map((t) => (
-              <div key={t.author} className="card-dark glow-card p-8 rounded-2xl">
-                <div className="text-blue-400 text-4xl mb-4">"</div>
-                <p className="text-gray-200 text-lg leading-relaxed mb-6 italic">{t.quote}</p>
-                <div>
-                  <p className="text-white font-semibold">{t.author}</p>
-                  <p className="text-gray-400 text-sm">{t.role}</p>
+            {TESTIMONIALS.map((t, i) => (
+              <div key={i} className="card-dark gradient-border p-8 rounded-2xl glow-card">
+                <div className="flex gap-0.5 mb-4">
+                  {Array.from({ length: t.stars }).map((_, j) => (
+                    <svg key={j} className="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-gray-200 text-lg leading-relaxed mb-6 italic">"{t.quote}"</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-600 to-teal-600 flex items-center justify-center text-white text-sm font-bold">
+                    {t.author[0]}
+                  </div>
+                  <div>
+                    <p className="text-white font-semibold text-sm">{t.author}</p>
+                    <p className="text-gray-500 text-xs">{t.role}</p>
+                  </div>
                 </div>
               </div>
             ))}
@@ -316,45 +425,55 @@ export default function Home() {
       </section>
 
       {/* ── Founders ── */}
-      <section className="section-pad bg-navy-900">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Our Founders</h2>
-          <p className="text-gray-300 mb-12">The team behind the world's first truly AI-native EMR.</p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+      <section className="section-pad-sm bg-navy-950">
+        <div className="container-xl">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-extrabold text-white">Meet the <span className="gradient-text">Founders</span></h2>
+            <p className="text-gray-500 mt-2">Building the world's first truly AI-native EMR.</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
             {[
-              { name: "Mehul Makwana", role: "Co-Founder & CEO" },
-              { name: "Ami Agrawal", role: "Co-Founder & COO" },
+              { name: "Mehul Makwana", role: "Co-Founder & CEO", initials: "MM" },
+              { name: "Ami Agrawal", role: "Co-Founder & COO", initials: "AA" },
             ].map((f) => (
-              <div key={f.name} className="card-dark glow-card p-8 rounded-2xl flex flex-col items-center">
-                <div className="w-20 h-20 rounded-full gradient-btn flex items-center justify-center text-2xl font-bold mb-4">
-                  {f.name.split(" ").map(n => n[0]).join("")}
+              <div key={f.name} className="card-dark gradient-border glow-card p-8 rounded-2xl flex flex-col items-center text-center">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-cyan-500 to-teal-600 flex items-center justify-center text-xl font-extrabold text-white mb-4 shadow-[0_0_30px_rgba(6,182,212,0.3)]">
+                  {f.initials}
                 </div>
-                <h3 className="text-white font-bold text-xl">{f.name}</h3>
-                <p className="text-blue-400 text-sm mt-1">{f.role}</p>
+                <h3 className="text-white font-bold text-lg">{f.name}</h3>
+                <p className="text-cyan-400 text-sm mt-1">{f.role}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── CTA ── */}
-      <section className="section-pad" style={{ background: "linear-gradient(135deg, #1e3a8a 0%, #312e81 100%)" }}>
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-6">
-            Transform EMR & Revenue Operations With{" "}
-            <span style={{ color: "#93c5fd" }}>Autonomous AI Healthcare Agents</span>
+      {/* ── Final CTA ── */}
+      <section className="section-pad relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-cyan-600/10 via-navy-900 to-teal-600/10" />
+        <div className="absolute inset-0 opacity-5"
+          style={{
+            backgroundImage: "linear-gradient(rgba(6,182,212,1) 1px, transparent 1px), linear-gradient(90deg, rgba(6,182,212,1) 1px, transparent 1px)",
+            backgroundSize: "60px 60px",
+          }}
+        />
+        <div className="relative container-xl text-center">
+          <span className="badge-teal mb-6 inline-block">Ready to transform?</span>
+          <h2 className="text-4xl md:text-6xl font-extrabold text-white mb-6 leading-tight tracking-tight">
+            Transform EMR & Revenue Operations<br />
+            with <span className="gradient-text">Autonomous AI Agents</span>
           </h2>
-          <p className="text-blue-200 text-lg mb-4">
-            The first AI-native EMR built with intelligent agent automation — not AI bolted on.
+          <p className="text-gray-400 text-xl mb-4 max-w-2xl mx-auto">
+            The first AI-native EHR built with intelligent agent automation — not AI bolted on as an afterthought.
           </p>
-          <blockquote className="text-blue-100 italic text-lg mb-10 border-l-4 border-blue-400 pl-4 text-left max-w-2xl mx-auto">
+          <blockquote className="text-cyan-400 italic text-lg mb-10 max-w-2xl mx-auto">
             "We didn't build another EMR. We built an AI-first care enablement system that happens to replace your EMR."
           </blockquote>
           <div className="flex flex-wrap justify-center gap-4">
-            <a href={APP_URL} className="bg-white text-navy-900 font-bold px-10 py-4 rounded-xl text-base hover:bg-blue-50 transition-colors">
+            <a href={APP_URL} className="gradient-btn px-10 py-4 rounded-xl text-base font-bold inline-flex items-center gap-2">
               Get Started Free →
             </a>
-            <a href={APP_URL} className="border border-white/40 text-white px-10 py-4 rounded-xl text-base hover:bg-white/10 transition-colors">
+            <a href={APP_URL} className="btn-outline px-10 py-4 rounded-xl text-base font-semibold">
               Watch Demo
             </a>
           </div>
