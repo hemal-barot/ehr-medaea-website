@@ -159,8 +159,8 @@ export default function Home() {
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white leading-[1.05] mb-6 tracking-tight">
                 The AI-Native{" "}
                 <span className="gradient-text-warm">EHR</span>{" "}
-                Built for{" "}
-                <span className="gradient-text">Modern Care</span>
+                That Works as Hard{" "}
+                <span className="gradient-text">as You Do</span>
               </h1>
 
               <p className="text-lg text-gray-400 leading-relaxed mb-8 max-w-lg">

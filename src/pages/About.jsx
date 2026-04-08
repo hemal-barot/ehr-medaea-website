@@ -1,11 +1,69 @@
+import { useState, useEffect, useRef } from "react";
+
 const APP_URL = import.meta.env.VITE_APP_URL || "http://localhost:5000";
 
 const STATS = [
-  { value: "45%", label: "Reduced admin time", icon: "⏱️" },
-  { value: "62%", label: "Fewer claim denials", icon: "🚫" },
-  { value: "40%", label: "Higher productivity", icon: "📈" },
-  { value: "30%", label: "Cost savings", icon: "💰" },
+  { value: 45, suffix: "%", label: "Reduced admin time", icon: "⏱️" },
+  { value: 62, suffix: "%", label: "Fewer claim denials", icon: "🚫" },
+  { value: 40, suffix: "%", label: "Higher productivity", icon: "📈" },
+  { value: 30, suffix: "%", label: "Cost savings", icon: "💰" },
 ];
+
+function AnimatedStat({ value, suffix, label, icon, inView }) {
+  const [count, setCount] = useState(0);
+  const hasAnimated = useRef(false);
+
+  useEffect(() => {
+    if (!inView || hasAnimated.current) return;
+    hasAnimated.current = true;
+    const duration = 1800;
+    const steps = 60;
+    const increment = value / steps;
+    let current = 0;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= value) {
+        setCount(value);
+        clearInterval(timer);
+      } else {
+        setCount(Math.floor(current));
+      }
+    }, duration / steps);
+    return () => clearInterval(timer);
+  }, [inView, value]);
+
+  return (
+    <div className="text-center card-dark gradient-border p-8 rounded-2xl glow-card">
+      <div className="text-3xl mb-3">{icon}</div>
+      <div className="text-5xl font-extrabold stat-shine mb-2 tabular-nums">
+        {count}{suffix}
+      </div>
+      <p className="text-gray-400 text-sm">{label}</p>
+    </div>
+  );
+}
+
+function StatsSection() {
+  const ref = useRef(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setInView(true); },
+      { threshold: 0.3 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={ref} className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      {STATS.map((s) => (
+        <AnimatedStat key={s.label} {...s} inView={inView} />
+      ))}
+    </div>
+  );
+}
 
 const DIFFERENTIATORS = [
   { icon: "🔗", text: "Unified EMR + Billing + AI Agents — no bolt-ons, no integrations to manage" },
@@ -86,18 +144,10 @@ export default function About() {
         </div>
       </section>
 
-      {/* ── Stats bar ── */}
+      {/* ── Animated Stats bar ── */}
       <section className="py-14 border-y border-cyan-500/8" style={{ background: "rgba(6,182,212,0.025)" }}>
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {STATS.map((s) => (
-              <div key={s.label} className="text-center">
-                <div className="text-3xl mb-2">{s.icon}</div>
-                <div className="text-4xl font-extrabold stat-shine mb-1">{s.value}</div>
-                <p className="text-gray-500 text-sm">{s.label}</p>
-              </div>
-            ))}
-          </div>
+          <StatsSection />
         </div>
       </section>
 
