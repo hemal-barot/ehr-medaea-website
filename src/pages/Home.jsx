@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const APP_URL = import.meta.env.VITE_APP_URL || "http://localhost:5000";
@@ -88,30 +87,6 @@ const TESTIMONIALS = [
     stars: 5,
   },
 ];
-
-function AnimatedCounter({ target, suffix = "" }) {
-  const [count, setCount] = useState(0);
-  const numericTarget = parseFloat(target);
-
-  useEffect(() => {
-    const duration = 1500;
-    const steps = 60;
-    const increment = numericTarget / steps;
-    let current = 0;
-    const timer = setInterval(() => {
-      current += increment;
-      if (current >= numericTarget) {
-        setCount(numericTarget);
-        clearInterval(timer);
-      } else {
-        setCount(Math.floor(current));
-      }
-    }, duration / steps);
-    return () => clearInterval(timer);
-  }, [numericTarget]);
-
-  return <>{count}{suffix}</>;
-}
 
 export default function Home() {
   return (
