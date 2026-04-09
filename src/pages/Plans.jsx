@@ -1,146 +1,512 @@
+import { useState } from "react";
+
 const APP_URL = import.meta.env.VITE_APP_URL || "http://localhost:5000";
 
 const PLANS = [
   {
     name: "Starter",
-    tagline: "For solo practitioners and small clinics",
-    price: "Contact Us",
+    tagline: "Solo & small practices getting started with AI",
+    price: "$299",
+    period: "per provider/month",
+    annual: "$249/provider/month billed annually",
     highlight: false,
+    icon: "🏥",
+    color: "bg-slate-50 border-slate-200",
+    btnClass: "btn-outline",
+    badge: null,
+    cta: "Start Free Trial",
     features: [
-      "Ambient Clinical Scribe",
-      "SOAP Note Generation",
-      "Basic ICD/CPT Coding",
-      "Patient Scheduling",
-      "HIPAA-secure infrastructure",
-      "Email support",
+      { label: "Ambient Clinical Scribe", included: true },
+      { label: "SOAP Note Generation", included: true },
+      { label: "Basic ICD/CPT Coding", included: true },
+      { label: "Patient Scheduling", included: true },
+      { label: "HIPAA-Secure Infrastructure", included: true },
+      { label: "Up to 2 providers", included: true },
+      { label: "Email & chat support", included: true },
+      { label: "Autonomous Revenue Cycle", included: false },
+      { label: "Eligibility & Prior Auth Agent", included: false },
+      { label: "Custom Specialty Templates", included: false },
+      { label: "Priority Support & SLA", included: false },
     ],
   },
   {
     name: "Professional",
-    tagline: "For growing specialty practices",
-    price: "Contact Us",
+    tagline: "Growing specialty practices that want full AI automation",
+    price: "$599",
+    period: "per provider/month",
+    annual: "$499/provider/month billed annually",
     highlight: true,
+    icon: "⚡",
+    color: "plan-featured",
+    btnClass: "text-center px-5 py-3.5 rounded-xl font-bold text-sm bg-white text-medical-800 hover:bg-medical-50 transition-colors shadow-btn-hover inline-block",
+    badge: "⭐ Most Popular",
+    cta: "Start Free Trial",
     features: [
-      "Everything in Starter",
-      "Autonomous Revenue Cycle",
-      "Real-Time Revenue Intelligence",
-      "Eligibility & Prior Auth Agent",
-      "Claims Integrity Agent",
-      "10+ Specialty Templates",
-      "Priority support",
+      { label: "Everything in Starter", included: true, bold: true },
+      { label: "Autonomous Revenue Cycle", included: true },
+      { label: "Real-Time Revenue Intelligence", included: true },
+      { label: "Eligibility & Prior Auth Agent", included: true },
+      { label: "Claims Integrity Agent", included: true },
+      { label: "10+ Specialty Templates", included: true },
+      { label: "Up to 15 providers", included: true },
+      { label: "Priority support & 99.9% SLA", included: true },
+      { label: "Custom reporting & dashboards", included: true },
+      { label: "API integrations (labs, pharmacy)", included: true },
+      { label: "On-premise deployment", included: false },
     ],
   },
   {
     name: "Enterprise",
-    tagline: "For large groups and health systems",
+    tagline: "Large groups, health systems, and custom deployments",
     price: "Custom",
+    period: "tailored to your organization",
+    annual: "Multi-year contract options available",
     highlight: false,
+    icon: "🏢",
+    color: "bg-slate-900 border-slate-700",
+    btnClass: "btn-secondary",
+    badge: null,
+    cta: "Contact Sales",
+    textColor: "text-white",
     features: [
-      "Everything in Professional",
-      "Custom AI Agent Configuration",
-      "Multi-site & Multi-specialty",
-      "FHIR API Access",
-      "Dedicated success manager",
-      "SLA guarantees",
-      "On-premise deployment option",
+      { label: "Everything in Professional", included: true, bold: true },
+      { label: "Unlimited providers", included: true },
+      { label: "Custom AI Agent Configuration", included: true },
+      { label: "Multi-site & Multi-specialty", included: true },
+      { label: "FHIR API & custom integrations", included: true },
+      { label: "On-premise deployment option", included: true },
+      { label: "Dedicated success manager", included: true },
+      { label: "99.99% uptime SLA", included: true },
+      { label: "Custom BAA & data governance", included: true },
+      { label: "Staff training & credentialing", included: true },
+      { label: "White-label option available", included: true },
     ],
   },
 ];
 
+const COMPARISON_TABLE = [
+  { category: "Clinical Documentation", rows: [
+    { feature: "Ambient AI Clinical Scribe", starter: true, pro: true, enterprise: true },
+    { feature: "SOAP Note Generation", starter: true, pro: true, enterprise: true },
+    { feature: "Real-Time Note Review", starter: false, pro: true, enterprise: true },
+    { feature: "Specialty Note Templates", starter: "Basic", pro: "10+", enterprise: "Custom" },
+    { feature: "Dictation & Voice Commands", starter: true, pro: true, enterprise: true },
+    { feature: "Problem List Auto-Update", starter: false, pro: true, enterprise: true },
+  ]},
+  { category: "Coding & Billing", rows: [
+    { feature: "ICD-10 / CPT Auto-Coding", starter: true, pro: true, enterprise: true },
+    { feature: "HCC Capture (Value-Based Care)", starter: false, pro: true, enterprise: true },
+    { feature: "NCCI Edit Compliance", starter: false, pro: true, enterprise: true },
+    { feature: "Autonomous Revenue Cycle", starter: false, pro: true, enterprise: true },
+    { feature: "Real-Time Revenue Intelligence", starter: false, pro: true, enterprise: true },
+    { feature: "Denial Risk Prediction", starter: false, pro: true, enterprise: true },
+    { feature: "Payment Posting Automation", starter: false, pro: true, enterprise: true },
+  ]},
+  { category: "AI Agents", rows: [
+    { feature: "Eligibility & Prior Auth Agent", starter: false, pro: true, enterprise: true },
+    { feature: "Claims Integrity Agent", starter: false, pro: true, enterprise: true },
+    { feature: "Scheduling Agent", starter: true, pro: true, enterprise: true },
+    { feature: "Clinical Scribe Agent", starter: true, pro: true, enterprise: true },
+    { feature: "Custom AI Agent Config", starter: false, pro: false, enterprise: true },
+  ]},
+  { category: "Security & Compliance", rows: [
+    { feature: "HIPAA-Secure Infrastructure", starter: true, pro: true, enterprise: true },
+    { feature: "AES-256 Encryption", starter: true, pro: true, enterprise: true },
+    { feature: "Audit Logs & Explainable AI", starter: true, pro: true, enterprise: true },
+    { feature: "SOC2 (In Progress)", starter: true, pro: true, enterprise: true },
+    { feature: "FHIR API Access", starter: false, pro: "Limited", enterprise: true },
+    { feature: "On-Premise Deployment", starter: false, pro: false, enterprise: true },
+  ]},
+  { category: "Support & Scale", rows: [
+    { feature: "Max Providers", starter: "2", pro: "15", enterprise: "Unlimited" },
+    { feature: "Onboarding Training", starter: true, pro: true, enterprise: true },
+    { feature: "Email & Chat Support", starter: true, pro: true, enterprise: true },
+    { feature: "Priority Support & SLA", starter: false, pro: true, enterprise: true },
+    { feature: "Dedicated Success Manager", starter: false, pro: false, enterprise: true },
+    { feature: "99.9%+ Uptime SLA", starter: false, pro: true, enterprise: "99.99%" },
+  ]},
+];
+
+function CellValue({ value, dark }) {
+  const textMuted = dark ? "text-slate-400" : "text-slate-400";
+  if (value === true) return (
+    <div className="flex justify-center">
+      <div className="w-6 h-6 rounded-full bg-emerald-100 border border-emerald-200 flex items-center justify-center">
+        <svg className="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7"/>
+        </svg>
+      </div>
+    </div>
+  );
+  if (value === false) return (
+    <div className="flex justify-center">
+      <div className="w-6 h-6 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center">
+        <svg className="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4"/>
+        </svg>
+      </div>
+    </div>
+  );
+  return <div className="text-center text-medical-700 text-xs font-semibold">{value}</div>;
+}
+
+function ROICalculator() {
+  const [providers, setProviders] = useState(3);
+  const [patients, setPatients]   = useState(20);
+
+  const hoursReclaimed = providers * 4 * 5 * 52;
+  const denialSavings  = Math.round(providers * patients * 52 * 0.15 * 185 * 0.62);
+  const revenueCapture = Math.round(providers * patients * 52 * 260 * 0.35);
+  const totalAnnual    = denialSavings + revenueCapture;
+  const roi            = Math.round((totalAnnual / (providers * 599 * 12)) * 100);
+
+  return (
+    <div className="bg-white rounded-2xl shadow-card-lg p-8 border border-slate-100">
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-medical-600 to-teal-600 flex items-center justify-center text-2xl shadow-blue-glow">💰</div>
+        <div>
+          <h3 className="text-slate-800 font-extrabold text-xl">Practice ROI Calculator</h3>
+          <p className="text-slate-500 text-sm">See your estimated annual impact with Medaea</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+        <div>
+          <div className="flex justify-between mb-2">
+            <label className="text-slate-700 text-sm font-semibold">Number of Providers</label>
+            <span className="text-medical-700 font-extrabold text-lg">{providers}</span>
+          </div>
+          <input type="range" min="1" max="25" value={providers} onChange={(e) => setProviders(+e.target.value)}
+            className="w-full h-2 rounded-full accent-medical-600 cursor-pointer" />
+          <div className="flex justify-between text-xs text-slate-400 mt-1"><span>1</span><span>25</span></div>
+        </div>
+        <div>
+          <div className="flex justify-between mb-2">
+            <label className="text-slate-700 text-sm font-semibold">Patients Per Provider / Day</label>
+            <span className="text-teal-700 font-extrabold text-lg">{patients}</span>
+          </div>
+          <input type="range" min="5" max="50" value={patients} onChange={(e) => setPatients(+e.target.value)}
+            className="w-full h-2 rounded-full accent-teal-600 cursor-pointer" />
+          <div className="flex justify-between text-xs text-slate-400 mt-1"><span>5</span><span>50</span></div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
+        {[
+          { label: "Hours Reclaimed/Year", value: hoursReclaimed.toLocaleString(), unit: "hrs", color: "bg-blue-50 border-blue-100 text-blue-700" },
+          { label: "Denial Savings", value: `$${(denialSavings/1000).toFixed(0)}K`, unit: "/yr", color: "bg-teal-50 border-teal-100 text-teal-700" },
+          { label: "Revenue Capture", value: `$${(revenueCapture/1000).toFixed(0)}K`, unit: "/yr", color: "bg-violet-50 border-violet-100 text-violet-700" },
+          { label: "Total Annual Impact", value: `$${(totalAnnual/1000).toFixed(0)}K`, unit: "+", color: "bg-emerald-50 border-emerald-100 text-emerald-700" },
+        ].map((s) => (
+          <div key={s.label} className={`${s.color} rounded-xl border p-4 text-center`}>
+            <div className="text-2xl font-extrabold mb-0.5">{s.value}<span className="text-sm">{s.unit}</span></div>
+            <div className="text-xs opacity-80">{s.label}</div>
+          </div>
+        ))}
+      </div>
+
+      <div className="flex items-center justify-between bg-medical-50 border border-medical-200 rounded-xl px-5 py-3">
+        <div>
+          <p className="text-medical-800 font-bold text-sm">Estimated ROI with Medaea Professional</p>
+          <p className="text-medical-600 text-xs">Based on {providers} providers at $599/provider/month</p>
+        </div>
+        <div className="text-right">
+          <div className="text-3xl font-extrabold stat-shine">{roi}%</div>
+          <div className="text-medical-600 text-xs">Annualized ROI</div>
+        </div>
+      </div>
+      <p className="mt-3 text-slate-400 text-xs text-center">
+        Estimates based on industry benchmarks: 4 hrs/day saved, 62% denial reduction, 35% revenue capture improvement.
+      </p>
+    </div>
+  );
+}
+
+const FAQS = [
+  { q: "Is there a free trial?", a: "Yes — all plans include a 14-day free trial with full access to the platform and dedicated onboarding support. No credit card required." },
+  { q: "How does pricing work for multi-provider practices?", a: "Pricing is per active provider per month. For 5+ providers, contact us for volume discounts. Annual billing saves you 17% compared to monthly." },
+  { q: "What's included in onboarding?", a: "Every plan includes dedicated onboarding with data migration, EHR configuration, staff training, and a dedicated go-live specialist. Most practices are live in under 7 days." },
+  { q: "Is Medaea HIPAA compliant?", a: "Yes — fully HIPAA-compliant with AES-256 encryption, zero-trust architecture, complete audit logs, and BAA agreements included with every plan." },
+  { q: "Can I switch plans anytime?", a: "Yes. You can upgrade, downgrade, or cancel at any time with no penalties. We offer month-to-month and annual billing options." },
+  { q: "How does Medaea integrate with existing systems?", a: "We offer a FHIR-first API with pre-built connectors for major labs, pharmacies, payers, and imaging centers. Professional and Enterprise plans include advanced integrations." },
+];
+
 export default function Plans() {
+  const [annual, setAnnual] = useState(false);
+
   return (
     <>
-      {/* Hero */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-hero">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-6">
-            Building the Future of Healthcare —{" "}
-            <span className="gradient-text">Explore Our Plans</span>
+      {/* ── Hero ── */}
+      <section className="relative pt-28 pb-20 hero-bg overflow-hidden">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <span className="badge-primary mb-5 inline-block">Transparent Pricing</span>
+          <h1 className="text-5xl md:text-6xl font-extrabold text-slate-900 mb-5 leading-tight tracking-tight">
+            Simple, Transparent Pricing<br/>
+            <span className="gradient-text">Built for Healthcare</span>
           </h1>
-          <p className="text-xl text-gray-300">
-            Flexible pricing designed for practices of every size. All plans include HIPAA compliance, onboarding support, and our core AI platform.
+          <p className="text-xl text-slate-500 max-w-2xl mx-auto mb-8">
+            No hidden fees. No vendor lock-in. No surprise bills. Every plan includes HIPAA compliance, BAA agreement, and onboarding support.
           </p>
+          {/* Billing toggle */}
+          <div className="inline-flex items-center gap-3 bg-white border border-slate-200 rounded-full p-1 shadow-card">
+            <button onClick={() => setAnnual(false)} className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${!annual ? "bg-medical-700 text-white shadow-btn" : "text-slate-600 hover:text-slate-800"}`}>Monthly</button>
+            <button onClick={() => setAnnual(true)}  className={`px-5 py-2 rounded-full text-sm font-semibold transition-all flex items-center gap-2 ${annual ? "bg-medical-700 text-white shadow-btn" : "text-slate-600 hover:text-slate-800"}`}>
+              Annual
+              <span className="bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-0.5 rounded-full">Save 17%</span>
+            </button>
+          </div>
         </div>
       </section>
 
-      {/* Plans Grid */}
-      <section className="section-pad bg-navy-900">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {PLANS.map((plan) => (
-              <div
-                key={plan.name}
-                className={`rounded-2xl p-8 flex flex-col ${
-                  plan.highlight
-                    ? "bg-gradient-to-br from-blue-600/20 to-purple-600/20 border-2 border-blue-500/50 relative"
-                    : "card-dark glow-card"
-                }`}
-              >
-                {plan.highlight && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                    <span className="gradient-btn px-4 py-1 rounded-full text-xs font-semibold">Most Popular</span>
+      {/* ── Plan Cards ── */}
+      <section className="pb-20 bg-slate-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-7 items-stretch">
+
+            {/* ── STARTER ── */}
+            <div className="relative flex flex-col bg-white border-2 border-slate-200 rounded-3xl shadow-card-md overflow-hidden hover:border-medical-300 hover:shadow-card-hover transition-all duration-300">
+              <div className="h-1.5 w-full bg-gradient-to-r from-medical-400 to-medical-600" />
+              <div className="p-8 flex flex-col flex-1">
+                <div className="mb-6">
+                  <div className="w-12 h-12 rounded-xl bg-medical-50 border border-medical-100 flex items-center justify-center text-2xl mb-4">🏥</div>
+                  <h3 className="font-extrabold text-2xl text-slate-900 mb-1">Starter</h3>
+                  <p className="text-slate-500 text-sm mb-5">Solo &amp; small practices getting started with AI</p>
+                  <div className="mb-1 flex items-end gap-1">
+                    <span className="text-5xl font-extrabold text-slate-900">{annual ? "$249" : "$299"}</span>
+                    <span className="text-slate-500 text-sm mb-1.5">/provider/month</span>
                   </div>
-                )}
-
-                <div className="mb-8">
-                  <h3 className="text-white font-bold text-2xl mb-1">{plan.name}</h3>
-                  <p className="text-gray-400 text-sm mb-4">{plan.tagline}</p>
-                  <div className="text-3xl font-extrabold gradient-text">{plan.price}</div>
+                  <p className="text-slate-400 text-xs">{annual ? "✓ Annual discount applied — save $600/yr" : "$249/provider/month billed annually"}</p>
                 </div>
-
-                <ul className="space-y-3 flex-1 mb-8">
-                  {plan.features.map((f) => (
-                    <li key={f} className="flex items-start gap-3">
-                      <svg className="w-5 h-5 text-green-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span className="text-gray-300 text-sm">{f}</span>
+                <a href={APP_URL} className="block text-center py-3.5 rounded-xl font-bold text-sm mb-6 bg-gradient-to-r from-medical-700 to-medical-600 text-white hover:from-medical-600 hover:to-medical-500 transition-all shadow-btn">
+                  Start Free Trial →
+                </a>
+                <ul className="space-y-2.5 flex-1">
+                  {[
+                    { label: "Ambient Clinical Scribe", ok: true },
+                    { label: "SOAP Note Generation", ok: true },
+                    { label: "Basic ICD/CPT Coding", ok: true },
+                    { label: "Patient Scheduling", ok: true },
+                    { label: "HIPAA-Secure Infrastructure", ok: true },
+                    { label: "Up to 2 providers", ok: true },
+                    { label: "Email & chat support", ok: true },
+                    { label: "Autonomous Revenue Cycle", ok: false },
+                    { label: "Eligibility & Prior Auth Agent", ok: false },
+                    { label: "Custom Specialty Templates", ok: false },
+                    { label: "Priority Support & SLA", ok: false },
+                  ].map((f) => (
+                    <li key={f.label} className="flex items-center gap-2.5">
+                      {f.ok ? (
+                        <div className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
+                          <svg className="w-3 h-3 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7"/></svg>
+                        </div>
+                      ) : (
+                        <div className="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center flex-shrink-0">
+                          <svg className="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4"/></svg>
+                        </div>
+                      )}
+                      <span className={`text-sm ${f.ok ? "text-slate-700" : "text-slate-400"}`}>{f.label}</span>
                     </li>
                   ))}
                 </ul>
-
-                <a
-                  href={APP_URL}
-                  className={`text-center py-3 rounded-xl font-semibold text-sm transition-all ${
-                    plan.highlight
-                      ? "gradient-btn"
-                      : "border border-white/20 text-white hover:bg-white/10"
-                  }`}
-                >
-                  {plan.name === "Enterprise" ? "Contact Sales" : "Get Started"}
-                </a>
               </div>
-            ))}
+            </div>
+
+            {/* ── PROFESSIONAL (featured) ── */}
+            <div className="relative flex flex-col rounded-3xl overflow-hidden" style={{ boxShadow: "0 20px 60px rgba(29,78,216,0.28), 0 4px 16px rgba(29,78,216,0.18)" }}>
+              {/* Badge */}
+              <div className="absolute -top-0 left-0 right-0 flex justify-center z-10 pt-0">
+                <div className="bg-amber-400 text-amber-900 px-5 py-1.5 text-xs font-extrabold tracking-wide rounded-b-xl shadow-sm">
+                  ⭐ Most Popular
+                </div>
+              </div>
+              <div className="flex flex-col flex-1 p-8 pt-12" style={{ background: "linear-gradient(160deg, #1d4ed8 0%, #1e40af 60%, #0d9488 100%)" }}>
+                <div className="mb-6">
+                  <div className="w-12 h-12 rounded-xl bg-white/15 border border-white/20 flex items-center justify-center text-2xl mb-4">⚡</div>
+                  <h3 className="font-extrabold text-2xl text-white mb-1">Professional</h3>
+                  <p className="text-blue-100 text-sm mb-5">Growing specialty practices that want full AI automation</p>
+                  <div className="mb-1 flex items-end gap-1">
+                    <span className="text-5xl font-extrabold text-white">{annual ? "$499" : "$599"}</span>
+                    <span className="text-blue-200 text-sm mb-1.5">/provider/month</span>
+                  </div>
+                  <p className="text-blue-200 text-xs">{annual ? "✓ Annual discount applied — save $1,200/yr" : "$499/provider/month billed annually"}</p>
+                </div>
+                <a href={APP_URL} className="block text-center py-3.5 rounded-xl font-bold text-sm mb-6 bg-white text-medical-800 hover:bg-blue-50 transition-colors shadow-btn">
+                  Start Free Trial →
+                </a>
+                <ul className="space-y-2.5 flex-1">
+                  {[
+                    { label: "Everything in Starter", bold: true },
+                    { label: "Autonomous Revenue Cycle" },
+                    { label: "Real-Time Revenue Intelligence" },
+                    { label: "Eligibility & Prior Auth Agent" },
+                    { label: "Claims Integrity Agent" },
+                    { label: "10+ Specialty Templates" },
+                    { label: "Up to 15 providers" },
+                    { label: "Priority support & 99.9% SLA" },
+                    { label: "Custom reporting & dashboards" },
+                    { label: "API integrations (labs, pharmacy)" },
+                  ].map((f) => (
+                    <li key={f.label} className="flex items-center gap-2.5">
+                      <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
+                        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7"/></svg>
+                      </div>
+                      <span className={`text-sm text-white ${f.bold ? "font-bold" : ""}`}>{f.label}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            {/* ── ENTERPRISE ── */}
+            <div className="relative flex flex-col rounded-3xl overflow-hidden border-2 border-teal-700 hover:border-teal-500 transition-all duration-300" style={{ boxShadow: "0 8px 32px rgba(13,148,136,0.18)", background: "linear-gradient(160deg, #134e4a 0%, #0f766e 50%, #1e3a8a 100%)" }}>
+              <div className="h-1.5 w-full bg-gradient-to-r from-teal-400 to-teal-300" />
+              <div className="p-8 flex flex-col flex-1">
+                <div className="mb-6">
+                  <div className="w-12 h-12 rounded-xl bg-white/15 border border-white/20 flex items-center justify-center text-2xl mb-4">🏢</div>
+                  <h3 className="font-extrabold text-2xl text-white mb-1">Enterprise</h3>
+                  <p className="text-teal-100 text-sm mb-5">Large groups, health systems, and custom deployments</p>
+                  <div className="mb-1">
+                    <span className="text-5xl font-extrabold text-white">Custom</span>
+                  </div>
+                  <p className="text-teal-200 text-xs mt-1">Tailored to your organization · Multi-year options</p>
+                </div>
+                <a href={APP_URL} className="block text-center py-3.5 rounded-xl font-bold text-sm mb-6 bg-white text-teal-800 hover:bg-teal-50 transition-colors shadow-teal-glow">
+                  Contact Sales →
+                </a>
+                <ul className="space-y-2.5 flex-1">
+                  {[
+                    { label: "Everything in Professional", bold: true },
+                    { label: "Unlimited providers" },
+                    { label: "Custom AI Agent Configuration" },
+                    { label: "Multi-site & Multi-specialty" },
+                    { label: "FHIR API & custom integrations" },
+                    { label: "On-premise deployment option" },
+                    { label: "Dedicated success manager" },
+                    { label: "99.99% uptime SLA" },
+                    { label: "Custom BAA & data governance" },
+                    { label: "Staff training & credentialing" },
+                    { label: "White-label option available" },
+                  ].map((f) => (
+                    <li key={f.label} className="flex items-center gap-2.5">
+                      <div className="w-5 h-5 rounded-full bg-teal-400/30 flex items-center justify-center flex-shrink-0">
+                        <svg className="w-3 h-3 text-teal-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7"/></svg>
+                      </div>
+                      <span className={`text-sm text-teal-50 ${f.bold ? "font-bold text-white" : ""}`}>{f.label}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
 
-          {/* FAQ */}
-          <div className="mt-20">
-            <h2 className="text-2xl font-bold text-white text-center mb-10">Frequently Asked Questions</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {[
-                { q: "How long does implementation take?", a: "Most practices go live in under 7 days. Our onboarding team handles all data migration and staff training." },
-                { q: "Is Medaea HIPAA compliant?", a: "Yes. Medaea is fully HIPAA-compliant with end-to-end encryption, audit logs, and BAA agreements for all plans." },
-                { q: "Can I integrate with my existing systems?", a: "Yes. Medaea offers a FHIR-first API and pre-built integrations with major labs, pharmacies, and payers." },
-                { q: "What specialties are supported?", a: "We support 10+ specialties including orthopedics, dermatology, behavioral health, cardiology, and more with pre-built templates." },
-              ].map((faq) => (
-                <div key={faq.q} className="card-dark p-6 rounded-xl">
-                  <h4 className="text-white font-semibold mb-2">{faq.q}</h4>
-                  <p className="text-gray-400 text-sm leading-relaxed">{faq.a}</p>
-                </div>
-              ))}
-            </div>
+          <div className="mt-8 text-center text-slate-500 text-sm">
+            All plans include a 14-day free trial · No credit card required · HIPAA BAA included{" "}
+            <a href={APP_URL} className="text-medical-700 font-semibold hover:text-medical-600">→ Talk to our team</a>
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="section-pad bg-navy-800/30">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">Not sure which plan is right?</h2>
-          <p className="text-gray-300 mb-8">Talk to our team — we'll help you find the perfect fit for your practice.</p>
-          <a href={APP_URL} className="gradient-btn inline-block px-10 py-4 rounded-xl text-base">
-            Schedule a Call →
-          </a>
+      {/* ── Feature Comparison Table ── */}
+      <section className="section-pad bg-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <span className="badge-primary mb-4 inline-block">Full Comparison</span>
+            <h2 className="text-4xl font-extrabold text-slate-900">
+              Compare Every <span className="gradient-text">Feature</span>
+            </h2>
+            <p className="text-slate-500 mt-2">See exactly what's included in each plan, down to every capability.</p>
+          </div>
+
+          <div className="overflow-x-auto rounded-2xl border border-slate-200 shadow-card">
+            <table className="w-full min-w-[640px]">
+              <thead className="bg-slate-50">
+                <tr className="border-b border-slate-200">
+                  <th className="text-left py-4 px-6 text-slate-500 text-sm font-semibold w-1/2">Feature</th>
+                  {PLANS.map((p) => (
+                    <th key={p.name} className="py-4 px-4 text-center">
+                      <div className={`text-sm font-extrabold ${p.highlight ? "text-medical-700" : "text-slate-700"}`}>{p.name}</div>
+                      <div className="text-xs text-slate-400 font-normal mt-0.5">{p.price === "Custom" ? "Custom" : p.price + "/provider"}</div>
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              {COMPARISON_TABLE.map((section) => (
+                <tbody key={section.category}>
+                  <tr className="border-b border-slate-100">
+                    <td colSpan={4} className="py-3 px-6 bg-slate-50">
+                      <span className="badge-primary text-xs">{section.category}</span>
+                    </td>
+                  </tr>
+                  {section.rows.map((row, i) => (
+                    <tr key={row.feature} className={`border-b border-slate-50 hover:bg-slate-50/50 transition-colors ${i % 2 === 0 ? "" : "bg-slate-50/30"}`}>
+                      <td className="py-3.5 px-6 text-slate-700 text-sm">{row.feature}</td>
+                      <td className="py-3.5 px-4"><CellValue value={row.starter} /></td>
+                      <td className="py-3.5 px-4 bg-medical-50/30"><CellValue value={row.pro} /></td>
+                      <td className="py-3.5 px-4"><CellValue value={row.enterprise} /></td>
+                    </tr>
+                  ))}
+                </tbody>
+              ))}
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {/* ── ROI Calculator ── */}
+      <section className="section-pad section-blue-top">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <span className="badge-teal mb-4 inline-block">ROI Calculator</span>
+            <h2 className="text-4xl font-extrabold text-slate-900 mb-3">
+              Calculate Your <span className="gradient-text">Practice's Return</span>
+            </h2>
+            <p className="text-slate-500 max-w-xl mx-auto">
+              Adjust the sliders to see your estimated annual savings, revenue impact, and ROI with Medaea.
+            </p>
+          </div>
+          <ROICalculator />
+          <div className="mt-8 text-center">
+            <a href={APP_URL} className="btn-primary inline-flex items-center gap-2 px-10 py-4 rounded-xl text-base font-bold">
+              Get Your Custom ROI Analysis →
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section className="section-pad bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <span className="badge-primary mb-4 inline-block">FAQ</span>
+            <h2 className="text-3xl font-extrabold text-slate-900">Frequently Asked <span className="gradient-text">Questions</span></h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {FAQS.map((faq) => (
+              <div key={faq.q} className="bg-white rounded-xl border border-slate-200 shadow-card p-6 hover:border-medical-200 hover:shadow-card-hover transition-all">
+                <h4 className="text-slate-800 font-bold text-sm mb-3 flex items-start gap-2">
+                  <span className="text-medical-600 font-extrabold text-base">Q</span>
+                  {faq.q}
+                </h4>
+                <p className="text-slate-500 text-sm leading-relaxed pl-5">{faq.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA ── */}
+      <section className="section-pad bg-gradient-to-r from-medical-700 to-teal-700 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-5" style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,1) 1px, transparent 1px)", backgroundSize: "28px 28px" }} />
+        <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-white">
+          <h2 className="text-4xl font-extrabold mb-4">
+            Start Your 14-Day <span className="text-teal-300">Free Trial Today</span>
+          </h2>
+          <p className="text-blue-100 text-lg mb-8">No credit card required. Full access. Dedicated onboarding. Cancel anytime.</p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <a href={APP_URL} className="px-10 py-4 rounded-xl text-base font-bold text-medical-900 bg-white hover:bg-medical-50 transition-colors shadow-btn">Start Free Trial →</a>
+            <a href={APP_URL} className="btn-outline-white px-10 py-4 rounded-xl text-base font-bold">Talk to Sales</a>
+          </div>
+          <p className="mt-5 text-blue-200 text-sm">14-day free trial · HIPAA compliant · No long-term contracts</p>
         </div>
       </section>
     </>
