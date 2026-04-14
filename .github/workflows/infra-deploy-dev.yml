@@ -1,0 +1,35 @@
+# ============================================================
+# ehr-medaea-website / infra-deploy-dev.yml
+# Deploys the edge infra layer (S3 + CloudFront) for the marketing site.
+# This creates/updates the S3 bucket and CloudFront distribution.
+# Run this ONCE first, then use deploy-dev.yml for content deploys.
+# Uses reusable workflow from Medaea-IAC/platform-workflows
+# ============================================================
+name: Deploy Marketing Website Infra — Dev
+
+on:
+  workflow_dispatch:
+    inputs:
+      layer:
+        description: "Infra layer to deploy"
+        type: choice
+        options: [dns, edge]
+        default: edge
+      plan_only:
+        description: "Plan only — no apply"
+        type: boolean
+        default: true
+
+jobs:
+  deploy-infra:
+    name: Deploy ${{ github.event.inputs.layer }} layer
+    uses: Medaea-IAC/platform-workflows/.github/workflows/terraform-plan-apply.yml@develop
+    with:
+      working_directory: environments/dev/${{ github.event.inputs.layer }}
+      environment_name: "dev"
+      aws_region: "us-east-1"
+      tf_version: "1.7.5"
+      plan_only: ${{ github.event.inputs.plan_only == 'true' }}
+    secrets:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
