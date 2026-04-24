@@ -1,0 +1,13 @@
+version: 0.0
+Resources:
+  - TargetService:
+      Type: AWS::ECS::Service
+      Properties:
+        TaskDefinition: <TASK_DEFINITION>
+        LoadBalancerInfo:
+          ContainerName: website
+          ContainerPort: 80
+        PlatformVersion: LATEST
+Hooks:
+  - BeforeAllowTraffic: medaea-prod-validate-website
+  - AfterAllowTraffic: medaea-prod-smoke-website
