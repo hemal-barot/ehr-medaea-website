@@ -1,4 +1,4 @@
-const APP_URL = import.meta.env.VITE_APP_URL || "http://localhost:5000";
+const APP_URL = import.meta.env.VITE_APP_URL || "http://https://fix-integrating-website-backend.d32ldxvpx3i29m.amplifyapp.com";
 
 const FEATURES = [
   { icon: "🎙️", title: "Ambient Clinical Scribe", desc: "Listens to encounters, generates structured SOAP notes with ICD/CPT codes in real-time — before you leave the room.", badge: "Core AI", color: "bg-blue-50 border-blue-100", iconBg: "bg-blue-100", textColor: "text-blue-700" },

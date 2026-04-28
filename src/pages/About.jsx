@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-const APP_URL = import.meta.env.VITE_APP_URL || "http://localhost:5000";
+const APP_URL = import.meta.env.VITE_APP_URL || "http://https://fix-integrating-website-backend.d32ldxvpx3i29m.amplifyapp.com";
 
 const STATS = [
   { value: 45, suffix: "%", label: "Reduced administrative time", icon: "⏱️", color: "bg-blue-50 text-blue-700 border-blue-100" },

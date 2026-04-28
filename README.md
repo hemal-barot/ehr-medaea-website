@@ -34,7 +34,7 @@ npm install
 
 # Copy env file and set your EHR app URL
 cp .env.example .env
-# Edit VITE_APP_URL to point to your EHR frontend (default: http://localhost:5000)
+# Edit VITE_APP_URL to point to your EHR frontend (default: http://https://fix-integrating-website-backend.d32ldxvpx3i29m.amplifyapp.com)
 
 # Start dev server (port 4000)
 npm run dev
@@ -63,7 +63,7 @@ docker run -p 80:80 medaea-website
 
 | Variable | Default | Description |
 |---|---|---|
-| `VITE_APP_URL` | `http://localhost:5000` | URL of the Medaea EHR React application |
+| `VITE_APP_URL` | `http://https://fix-integrating-website-backend.d32ldxvpx3i29m.amplifyapp.com` | URL of the Medaea EHR React application |
 | `VITE_APP_NAME` | `Medaea EHR` | App name label |
 
 > **Important:** `VITE_APP_URL` is **baked into the JS bundle at build time**. Changing it requires a full rebuild.

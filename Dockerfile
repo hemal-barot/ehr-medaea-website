@@ -4,7 +4,7 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Build-time env vars (baked into the JS bundle)
-ARG VITE_APP_URL=http://localhost:5000
+ARG VITE_APP_URL=http://https://fix-integrating-website-backend.d32ldxvpx3i29m.amplifyapp.com
 ARG VITE_APP_NAME="Medaea EHR"
 ENV VITE_APP_URL=$VITE_APP_URL
 ENV VITE_APP_NAME=$VITE_APP_NAME

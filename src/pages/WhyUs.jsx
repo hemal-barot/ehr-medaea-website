@@ -1,4 +1,4 @@
-const APP_URL = import.meta.env.VITE_APP_URL || "http://localhost:5000";
+const APP_URL = import.meta.env.VITE_APP_URL || "http://https://fix-integrating-website-backend.d32ldxvpx3i29m.amplifyapp.com";
 
 const COMPETITOR_TABLE = [
   { feature: "AI-native architecture (not bolted on)", medaea: true,      athena: false,     ecw: false,     note: "Built AI-first from the ground up" },

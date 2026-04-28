@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-const APP_URL = import.meta.env.VITE_APP_URL || "http://localhost:5000";
+const APP_URL = import.meta.env.VITE_APP_URL || "http://https://fix-integrating-website-backend.d32ldxvpx3i29m.amplifyapp.com";
 
 const FOOTER_LINKS = {
   Product: [
